@@ -15,12 +15,18 @@ public class Grid {
     /** The default size of a grid */
     private static final int DEFAULT = 10;
 
+    /** The size of the grid */
+    private int size;
+
     /**
      * This constructs a grid based on the default size.
      */
     public Grid(){
         this.board = new String[DEFAULT][DEFAULT];
+        this.size = DEFAULT;
+        this.setUpBoard();
     }
+
     /**
      * This constructs a grid bases on a size that is given.
      *
@@ -28,6 +34,8 @@ public class Grid {
      */
     public Grid(int size){
         this.board = new String[size][size];
+        this.size = size;
+        this.setUpBoard();
     }
 
     /**
@@ -58,17 +66,45 @@ public class Grid {
             }
             for(int j = 0; j < this.board.length; j++){
                 if(i == 0){
-                    System.out.print(j + " ");
+                    if(j == 0){
+                        System.out.print("    " + j + "   ");
+                    }else {
+                        System.out.print(j + "   ");
+                    }
                 }else {
-                    System.out.print(this.board[i][j] + " | ");
+                    System.out.print(this.board[i-1][j] + " | ");
                 }
             }
-            System.out.println("\n+---+---+---+---+---+---+---+---+---+---+");
+            System.out.println("\n  +---+---+---+---+---+---+---+---+---+---+ ");
         }
     }
 
+    /**
+     * This sets the grid up with a blank space.
+     */
+    public void setUpBoard(){
+        for(int i = 0; i < (this.board.length); i++){
+            for(int j = 0; j < (this.board.length); j++){
+              this.board[i][j] = " ";
+            }
+        }
+    }
+
+    /**
+     * This method returns the size of the grid a in a single direction.
+     *
+     * @return The size of the grid.
+     */
+    public int getSize(){
+        return this.size;
+    }
+
+    /**
+     * Used for testing of printing board.
+     */
     public static void main(String[] args) {
         Grid grid = new Grid();
+        grid.setUpBoard();
         grid.printGrid();
     }
 } // end Grid class
