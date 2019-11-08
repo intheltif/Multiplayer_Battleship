@@ -1,5 +1,3 @@
-package common;
-
 /**
  * TODO Finish this documentation and do documentation for each 
  *      method/constructor
