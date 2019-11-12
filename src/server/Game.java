@@ -1,5 +1,7 @@
 package server;
 
+import common.Player;
+
 import java.util.Random;
 
 /**
@@ -16,16 +18,10 @@ public class Game {
     private static final String MISS = "X";
 
     /** The grid for player one */
-    private Grid p1;
+    private Player player1;
 
     /** The grid for player two */
-    private Grid p2;
-
-    /** The total number of ships left for player one */
-    private int p1Total;
-
-    /** The total number of ships left for player two */
-    private int p2Total;
+    private Player player2;
 
     /** The number of ships each player gets */
     private int totalShips;
@@ -34,24 +30,28 @@ public class Game {
      * This constructor creates a game with a grid without a given a size.
      */
     public Game(){
-        this.p1 = new Grid();
-        this.p2 = new Grid();
-        this.setTotalShips(this.p1.getSize());
-        p1Total = this.totalShips;
-        p2Total = this.totalShips;
+        this.player1 = new Player();
+        this.player2 = new Player();
+        Grid grid = this.player1.getGrid();
+        int size = grid.getSize();
+        this.setTotalShips(size);
+        this.player1.setNumShips(this.totalShips);
+        this.player2.setNumShips(this.totalShips);
+        //p2Total = this.totalShips;
     }
 
     /**
      * This constructor creates a game with a grid of a given size.
      *
-     * @param size Given size for a grid.
+     * @param size The size of the grid.
+     * @param name The name of Player One.
+     * @param name2 The name of Player Two
      */
-    public Game(int size){
-        this.p1 = new Grid(size);
-        this.p2 = new Grid(size);
+    public Game(int size,String name, String name2){
         this.setTotalShips(size);
-        p1Total = this.totalShips;
-        p2Total = this.totalShips;
+        this.player1 = new Player(new Grid(size), name, this.totalShips);
+        this.player2 = new Player(new Grid(size), name2, this.totalShips);
+
     }
 
     //TODO The next four methods could be rewrote into two methods that each
@@ -60,40 +60,22 @@ public class Game {
     //     having to write new methods.
 
     /**
-     * Returns the current grid for player 1.
+     * Returns the current grid for player that is passed in..
      *
-     * @return The current grid for player 1.
+     * @return The current grid for player.
      */
-    public Grid getP1() {
-        return this.p1;
-    } // end getP1 method
+    public Grid getGrid(Player player) {
+        return player.getGrid();
+    } // end getGrid method
 
     /**
-     * This returns the grid for player2
+     * Returns the number of ships for player that is passed in.
      *
-     * @return the grid for player2
+     * @return the number of ships for player.
      */
-    public Grid getP2() {
-        return this.p2;
-    } // end getP2 method
-
-    /**
-     * Returns the number of ships for player 1.
-     *
-     * @return the number of ships for player 1.
-     */
-    public int getP1Total() {
-        return this.p1Total;
-    } // end getP1Total method
-
-    /**
-     * Returns the number of ships for player 2.
-     *
-     * @return The number of ships for player 2.
-     */
-    public int getP2Total() {
-        return this.p2Total;
-    } // end getP2Total method
+    public int getPlayerTotal(Player player) {
+        return player.getNumShips();
+    } // end getPlayerTotal method
 
     /**
      * The max number of ships each player is allowed.
@@ -167,12 +149,12 @@ public class Game {
      */
     public boolean isGameOver(){
         boolean over;
-        if(p1Total == 0){
+        if(this.player1.getNumShips() == 0){
             over = true;
-            System.out.println("Player Two Wins");
-        }if(p2Total == 0){
+            System.out.println(this.player2.getName() + " WINS!");
+        }if(this.player2.getNumShips() == 0){
             over = true;
-            System.out.println("Player One Wins");
+            System.out.println(this.player1.getName() + " WINS!");
         }else{
             over = false;
         }
@@ -185,14 +167,14 @@ public class Game {
     //     each one.
 
     /**
-     * Checks to see if a certain ship is destroyed on p1 board.
+     * Checks to see if a certain ship is destroyed on a given player's board.
      *
      * @param ship The ship that is being looked for.
      * @param board The board that is being checked.
+     * @param player THe player that is being checked.
      */
-    public void shipDestroyedP1(Ship ship, String[][] board) {
+    public void shipDestroyed(Ship ship, String[][] board, Player player) {
         int hits = 0;
-        int size = ship.getSize();
         String look = ship.getShip();
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
@@ -203,32 +185,9 @@ public class Game {
             }
         }
         if (hits == 0) {
-            this.p1Total--;
+            player.decreaseShips();
         }
-    } // end shipDestroyedP1 method
-
-    /**
-     *  Check to see if a certain ship is destroyed on p2 board.
-     *
-     * @param ship The ship that is being looked for.
-     * @param board The board that is being checked.
-     */
-    public void shipDestroyedP2(Ship ship, String[][] board){
-        int hits = 0;
-        int size = ship.getSize();
-        String look = ship.getShip();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                String current = board[i][j];
-                if (current.equals(look)) {
-                    hits++;
-                }
-            }
-        }
-        if (hits == 0) {
-            this.p2Total--;
-        }
-    } // end shipDestoryedP2 method
+    } // end shipDestroyed method
 
     /**
      * This method set the number of ships to put on the board.
@@ -251,5 +210,4 @@ public class Game {
             this.totalShips = r.nextInt(2 - 1) + 1;
         }
     } // end setTotalShips method
-
 } // end Game class
