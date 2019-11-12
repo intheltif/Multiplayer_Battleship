@@ -54,14 +54,19 @@ public class Game {
         p2Total = this.totalShips;
     }
 
+    //TODO The next four methods could be rewrote into two methods that each
+    //     take a Player as a parameter. This allows the networking part of the 
+    //     project to be much easier as any number of players can exist without 
+    //     having to write new methods.
+
     /**
-     * This returns the grid for player1
+     * Returns the current grid for player 1.
      *
-     * @return the grid for player1
+     * @return The current grid for player 1.
      */
     public Grid getP1() {
         return this.p1;
-    }
+    } // end getP1 method
 
     /**
      * This returns the grid for player2
@@ -70,40 +75,42 @@ public class Game {
      */
     public Grid getP2() {
         return this.p2;
-    }
+    } // end getP2 method
 
     /**
-     * The number of ships for player1
-     * @return number of ships
+     * Returns the number of ships for player 1.
+     *
+     * @return the number of ships for player 1.
      */
     public int getP1Total() {
         return this.p1Total;
-    }
+    } // end getP1Total method
 
     /**
-     * The number of ships for player2
-     * @return number of ships
+     * Returns the number of ships for player 2.
+     *
+     * @return The number of ships for player 2.
      */
     public int getP2Total() {
         return this.p2Total;
-    }
+    } // end getP2Total method
 
     /**
-     * The number of ships allowed for each player.
+     * The max number of ships each player is allowed.
      *
-     * @return Number of ships.
+     * @return The number of ships each player is allowed.
      */
     public int getTotalShips() {
         return this.totalShips;
-    }
+    } // end getTotalShips method
 
     /**
-     * This method checks to see if hit coordinates are a valid hit.
+     * Checks to see if coordinates given by a player are a valid hit.
      *
      * @param board The grid that is being checked.
      * @param row The row of the Grid.
      * @param column The column of the Grid.
-     * @return valid If the hit, hits a ship.
+     * @return True if the coordinates hit a ship, false otherwise.
      */
     public boolean validHit(String[][] board, int row, int column){
         boolean valid;
@@ -114,10 +121,11 @@ public class Game {
             valid = true;
         }
         return valid;
-    }
+    } // end validHit method
 
     /**
-     * This method will place a hit or a miss on the board.
+     * Places a hit or a miss on the board based on whether the given 
+     * coordiantes were a valid hit.
      *
      * @param board The Grid that is being played.
      * @param row The row of the Grid.
@@ -130,31 +138,32 @@ public class Game {
         }else{
             board[row][column] = MISS;
         }
-    }
+    } // end hit method
 
     /**
-     * This method clears a curtain ship from the grid.
+     * This method clears a certain ship from the grid.
      *
      * @param ship The ship to clear.
      * @param board The grid this is being cleared from.
      */
     public void clearShip(Ship ship, String[][]board){
-        String look = ship.getShip();
+        String shipToRemove = ship.getShip();
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board.length; j++){
                 String current = board[i][j];
-                if(current.equals(look)){
+                if(current.equals(shipToRemove)){
                     board[i][j] = " ";
-                }
-            }
-        }
-    }
+                } 
+            } // end inner for loop
+        } // end outter for loop
+    } // end clear ship method
 
     /**
-     * This method determines if the game is over. Returns true is the game
-     * is over and prints the winner.
+     * This method determines if the game is over. Returns true if one of the 
+     * players has 0 (zero) ships remaining on the board. Prints the winner of 
+     * the game to stdout.
      *
-     * @return If the game is over.
+     * @return True if one of the players has zero ships remaining.
      */
     public boolean isGameOver(){
         boolean over;
@@ -168,10 +177,15 @@ public class Game {
             over = false;
         }
         return over;
-    }
+    } // end isGameOver method
+
+    //TODO It might be good to have one method that checks if a ship is
+    //     destoryed and we just pass in a player. This allows any number of 
+    //     players to exist and the method won't have to be replicated for
+    //     each one.
 
     /**
-     *  Check to see if a curtain ship is destroyed on p1 board.
+     * Checks to see if a certain ship is destroyed on p1 board.
      *
      * @param ship The ship that is being looked for.
      * @param board The board that is being checked.
@@ -191,10 +205,10 @@ public class Game {
         if (hits == 0) {
             this.p1Total--;
         }
-    }
+    } // end shipDestroyedP1 method
 
     /**
-     *  Check to see if a curtain ship is destroyed on p2 board.
+     *  Check to see if a certain ship is destroyed on p2 board.
      *
      * @param ship The ship that is being looked for.
      * @param board The board that is being checked.
@@ -214,7 +228,7 @@ public class Game {
         if (hits == 0) {
             this.p2Total--;
         }
-    }
+    } // end shipDestoryedP2 method
 
     /**
      * This method set the number of ships to put on the board.
@@ -236,6 +250,6 @@ public class Game {
             //random # between 1-2
             this.totalShips = r.nextInt(2 - 1) + 1;
         }
-    }
+    } // end setTotalShips method
 
 } // end Game class
