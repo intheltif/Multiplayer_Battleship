@@ -89,13 +89,14 @@ public class Game {
     /**
      * Checks to see if coordinates given by a player are a valid hit.
      *
-     * @param board The grid that is being checked.
+     * @param player The player from which to get the grid that is being checked.
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      * @return True if the coordinates hit a ship, false otherwise.
      */
-    public boolean validHit(String[][] board, int row, int column){
+    public boolean validHit(Player player, int row, int column){
         boolean valid;
+        String[][] board = player.getGrid().getBoard();
         String hit = board[row][column];
         if(hit.equals(" ") || hit.equals(MISS)){
             valid = false;
@@ -109,12 +110,13 @@ public class Game {
      * Places a hit or a miss on the board based on whether the given 
      * coordiantes were a valid hit.
      *
-     * @param board The Grid that is being played.
+     * @param player The player from which to get the grid that is being checked.
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      */
-    public void hit(String[][] board, int row, int column){
-        boolean valid = validHit(board, row, column);
+    public void hit(Player player, int row, int column){
+        String[][] board = player.getGrid().getBoard();
+        boolean valid = validHit(player, row, column);
         if(valid){
             board[row][column] = HIT;
         }else{
@@ -126,10 +128,11 @@ public class Game {
      * This method clears a certain ship from the grid.
      *
      * @param ship The ship to clear.
-     * @param board The grid this is being cleared from.
+     * @param player The player from which to get the grid that is being checked.
      */
-    public void clearShip(Ship ship, String[][]board){
+    public void clearShip(Ship ship, Player player){
         String shipToRemove = ship.getShip();
+        String[][] board = player.getGrid().getBoard();
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board.length; j++){
                 String current = board[i][j];
@@ -170,12 +173,12 @@ public class Game {
      * Checks to see if a certain ship is destroyed on a given player's board.
      *
      * @param ship The ship that is being looked for.
-     * @param board The board that is being checked.
-     * @param player THe player that is being checked.
+     * @param player The player from which to get the board that is being checked.
      */
-    public void shipDestroyed(Ship ship, String[][] board, Player player) {
+    public void shipDestroyed(Ship ship, Player player) {
         int hits = 0;
         String look = ship.getShip();
+        String[][] board = player.getGrid().getBoard();
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
                 String current = board[i][j];
