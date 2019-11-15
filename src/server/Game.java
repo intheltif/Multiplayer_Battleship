@@ -107,9 +107,9 @@ public class Game {
      * @param column The column of the Grid.
      * @return True if the coordinates hit a ship, false otherwise.
      */
-    public boolean validHit(Player player, int row, int column){
+    public boolean validHit(String player, int row, int column){
         boolean valid;
-        String[][] board = player.getGrid().getBoard();
+        String[][] board = getGrid(player).getBoard();
         String hit = board[row][column];
         if(hit.equals(" ") || hit.equals(MISS)){
             valid = false;
@@ -123,14 +123,16 @@ public class Game {
      * Places a hit or a miss on the board based on whether the given 
      * coordiantes were a valid hit.
      *
-     * @param player The player from which to get the grid that is being checked.
+     * @param nickname The player from which to get the grid that is being checked.
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      */
     public void hit(String nickname, int row, int column){
-        String[][] board = player.getGrid().getBoard();
-        boolean valid = validHit(player, row, column);
-        if(valid){
+        String[][] board = getGrid(nickname).getBoard();
+        boolean valid = validHit(nickname, row, column);
+        if(board[row][column].equals("@")|| board[row][column].equals("@")){
+            System.out.println("INVALID MOVE");
+        }else if(valid){
             board[row][column] = HIT;
         }else{
             board[row][column] = MISS;
@@ -141,11 +143,11 @@ public class Game {
      * This method clears a certain ship from the grid.
      *
      * @param ship The ship to clear.
-     * @param player The player from which to get the grid that is being checked.
+     * @param nickname The player from which to get the grid that is being checked.
      */
-    public void clearShip(Ship ship,){
+    public void clearShip(Ship ship, String nickname){
         String shipToRemove = ship.getShip();
-        String[][] board = player.getGrid().getBoard();
+        String[][] board = getGrid(nickname).getBoard();
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board.length; j++){
                 String current = board[i][j];
@@ -230,7 +232,7 @@ public class Game {
 
     public void show(String nickname, String current){
         // "/show <username>
-        if(this.playerMap.get(nickname) == current){
+        if(this.playerMap.get(nickname).equals(current)){
             //TODO make sure it prints the board with ships on it
             Grid show = getGrid(nickname);
             show.printGrid();
