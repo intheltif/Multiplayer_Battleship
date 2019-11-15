@@ -80,6 +80,13 @@ public class Grid {
     }
 
     /**
+     * Prints the grid with only hits and misses.
+     */
+    public void printPartialGrid() {
+        //TODO Print the grid w/o ships.
+    }
+
+    /**
      * This sets the grid up with a blank space.
      */
     public void setUpBoard(){
