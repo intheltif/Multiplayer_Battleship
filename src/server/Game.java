@@ -111,7 +111,7 @@ public class Game {
         boolean valid;
         String[][] board = getGrid(player).getBoard();
         String hit = board[row][column];
-        if(hit.equals(" ") || hit.equals(MISS)){
+        if(hit.equals(" ")){
             valid = false;
         }else{
             valid = true;
@@ -127,16 +127,21 @@ public class Game {
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      */
-    public void hit(String nickname, int row, int column){
+    public boolean hit(String nickname, int row, int column){
         String[][] board = getGrid(nickname).getBoard();
+        boolean attacked;
         boolean valid = validHit(nickname, row, column);
-        if(board[row][column].equals("@")|| board[row][column].equals("@")){
+        if(board[row][column].equals("@")|| board[row][column].equals("X")){
             System.out.println("INVALID MOVE");
+            attacked = false;
         }else if(valid){
             board[row][column] = HIT;
+            attacked = true;
         }else{
             board[row][column] = MISS;
+            attacked = true;
         }
+        return attacked;
     } // end hit method
 
     /**
@@ -166,16 +171,20 @@ public class Game {
      * @return True if one of the players has zero ships remaining.
      */
     public boolean isGameOver(){
-        boolean over;
-        shipDestroyed();
-        if(this.player1.getNumShips() == 0){
-            over = true;
-            System.out.println(this.player2.getName() + " WINS!");
-        }if(this.player2.getNumShips() == 0){
-            over = true;
-            System.out.println(this.player1.getName() + " WINS!");
-        }else{
-            over = false;
+        boolean over =false;
+        String loser = " ";
+        for(String name: this.players) {
+            if (over == false){
+                over = shipDestroyed(name);
+                loser = name;
+            }
+        }
+        if(over == true) {
+            for (String name : this.players) {
+                if (!(loser.equals(name))){
+                    System.out.println(name + " WINS!");
+                }
+            }
         }
         return over;
     } // end isGameOver method
@@ -183,25 +192,20 @@ public class Game {
     /**
      * Checks to see if a certain ship is destroyed on a given player's board.
      *
-     * @param ship The ship that is being looked for.
      * @param player The player from which to get the board that is being checked.
      */
-    public void shipDestroyed(Ship ship, Player player) {
-        //TODO make this work were it checks all ships. and works for all players at once.
-        int hits = 0;
-        String look = ship.getShip();
-        String[][] board = player.getGrid().getBoard();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                String current = board[i][j];
-                if (current.equals(look)) {
-                    hits++;
+    public boolean shipDestroyed(String player) {
+        boolean over = true;
+        String[][] board = getGrid(player).getBoard();
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board.length; j++){
+                String item = board[i][j];
+                if((item.equals(" "))){
+                    over = false;
                 }
             }
         }
-        if (hits == 0) {
-            player.decreaseShips();
-        }
+        return over;
     } // end shipDestroyed method
 
     /**

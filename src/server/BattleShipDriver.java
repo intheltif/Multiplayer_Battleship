@@ -126,8 +126,7 @@ public class BattleShipDriver {
                         if(com.length == 4) {
                             int row = Integer.parseInt(com[3]);
                             int column = Integer.parseInt(com[2]);
-                            attack(game, com[1], column, row);
-                            attacked = true;
+                            attacked = attack(game, com[1], column, row);
                         }else{
                             System.out.println("/attack <username> <column> " +
                                     "<row>");
@@ -149,10 +148,9 @@ public class BattleShipDriver {
         }
     }
 
-    public void attack(Game game, String nickname, int column, int row){
+    public boolean attack(Game game, String nickname, int column, int row){
         // "/attack <username> column row
-        String[][] grid = game.getGrid(nickname);
-        game.hit(grid, row, column);
+        return game.hit(nickname, row, column);
     }
 
 
