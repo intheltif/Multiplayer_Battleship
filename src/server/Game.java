@@ -226,9 +226,33 @@ public class Game {
         }
     } // end setTotalShips method
 
-    public void placeShips(){
+    public void placeShips(String nickname){
         //TODO place the ships bassed on the total ships.
-    }
+        String[][] board = getGrid(nickname).getBoard();
+        Random r = new Random();
+        for(int i=0; i < getTotalShips(); i++) {
+           switch(r.nextInt(5)) {
+               case 0:
+                   //TODO Add Carrier to board
+                   break;
+               case 1:
+                   //TODO Add Battleship to board
+                   break;
+               case 2:
+                   //TODO Add Cruiser to board
+                   break;
+               case 3:
+                   //TODO Add Submarine to board
+                   break;
+               case 4:
+                   //TODO Add Destroyer to board
+                   break;
+               default:
+                   System.out.println("Outside range of ship types");
+            } // end switch statement
+        } // end for loop
+    } // end placeShips method
+
 
     public void show(String nickname, String current){
         // "/show <username>
