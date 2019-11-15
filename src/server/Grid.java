@@ -9,11 +9,11 @@ package server;
  */
 public class Grid {
 
-    /** A 2D array that represent the grid */
-    private String[][] board;
-
     /** The default size of a grid */
     private static final int DEFAULT = 10;
+
+    /** A 2D array that represent the grid */
+    private String[][] board;
 
     /** The size of the grid */
     private int size;
