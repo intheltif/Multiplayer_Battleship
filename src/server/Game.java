@@ -17,28 +17,11 @@ public class Game {
     /** The string for a Miss */
     private static final String MISS = "X";
 
-    /** The grid for player one */
-    private Player player1;
-
-    /** The grid for player two */
-    private Player player2;
-
     /** The number of ships each player gets */
     private int totalShips;
 
-    /**
-     * This constructor creates a game with a grid without a given a size.
-     */
-    public Game(){
-        this.player1 = new Player();
-        this.player2 = new Player();
-        Grid grid = this.player1.getGrid();
-        int size = grid.getSize();
-        this.setTotalShips(size);
-        this.player1.setNumShips(this.totalShips);
-        this.player2.setNumShips(this.totalShips);
-        //p2Total = this.totalShips;
-    }
+    /** A hashmap */
+    private HashMap<String, Grid> playerMap;
 
     /**
      * This constructor creates a game with a grid of a given size.
@@ -47,17 +30,22 @@ public class Game {
      * @param name The name of Player One.
      * @param name2 The name of Player Two
      */
-    public Game(int size,String name, String name2){
+    public Game(int size){
         this.setTotalShips(size);
-        this.player1 = new Player(new Grid(size), name, this.totalShips);
-        this.player2 = new Player(new Grid(size), name2, this.totalShips);
-
+        this.playerMap = new HashMap<>();
     }
+    
+    /**
+     * Adds a new player to the game.
+     *
+     * @param nickname The chosen nickname for the player.
+     */
+    public void join(String nickname) {
 
-    //TODO The next four methods could be rewrote into two methods that each
-    //     take a Player as a parameter. This allows the networking part of the 
-    //     project to be much easier as any number of players can exist without 
-    //     having to write new methods.
+        this.playerMap.put(nickname, new Grid());
+
+    } // end join method
+
 
     /**
      * Returns the current grid for player that is passed in..
