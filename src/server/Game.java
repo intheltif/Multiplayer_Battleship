@@ -85,6 +85,17 @@ public class Game {
     public int getTotalShips() {
         return this.totalShips;
     } // end getTotalShips method
+    
+    /**
+     * Returns the number of players currently playing
+     * TODO Still have to handle clients dropping unexpectedly (ie CTRL+C)
+     * @return The number of players in a game.
+     */
+    public int getNumPlayers() {
+
+        return this.players.size();
+
+    } // end getNumPlayers method
 
     /**
      * Checks to see if coordinates given by a player are a valid hit.
