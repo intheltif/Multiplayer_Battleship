@@ -61,9 +61,10 @@ public class BattleShipDriver {
         // If we made it here, then we can successfully exit
         System.exit(SUCCESS);
 */
-        // TODO Might be best to have a while loop here that continually waits
-        //      for input and when the next command is a legal command then
-        //      execute it (like /join or /play) by calling the correct
+        // TODO WHEN WE START NETWORKED PORTION:
+        //      Might be best to have a while loop in client that continually 
+        //      waits for input and when the next command is a legal command 
+        //      then execute it (like /join or /play) by calling the correct
         //      method from Game class. Maybe have the Game class control
         //      handling user input after the /play command has been issued?
         try {
