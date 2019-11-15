@@ -66,7 +66,7 @@ public class Game {
      */
     public Grid getGrid(String player) {
         //TODO make it return the correct grid using the HashMap
-        return player.getGrid();
+        return this.playerMap.get(player);
     } // end getGrid method
 
     /**
@@ -230,13 +230,13 @@ public class Game {
 
     public void show(String nickname, String current){
         // "/show <username>
-        if(current.equals(nickname)){
+        if(this.playerMap.get(nickname) == current){
             //TODO make sure it prints the board with ships on it
-            Grid show = game.getGrid(nickname);
+            Grid show = getGrid(nickname);
             show.printGrid();
         }else{
             //TODO make sure it prints the board with no ships
-            Grid show = game.getGrid(nickname);
+            Grid show = getGrid(nickname);
             show.printPartialGrid();
         }
     }
