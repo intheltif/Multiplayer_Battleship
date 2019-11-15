@@ -38,29 +38,34 @@ public class BattleShipDriver {
      *             10x10) since our application assumes square boards.
      */
     public static void main(String[] args) {
+/*
+        int port;
+        int size;
+        // Validate correct number of arguments.
+        if(args.length != NUM_ARGS) {
+            System.out.println(USAGE_MSG);
+            System.exit(FAILURE);
+        }
+        try{
+            port = Integer.parseInt(args[0]);
+            size = Integer.parseInt(args[1]);
+        } catch(NumberFormatException nfe) {
+            System.err.println("Invalid argument type. Arguments must be of integers.");
+            System.exit(FAILURE);
+        }
 
-//        int port;
-//        int size;
-//        // Validate correct number of arguments.
-//        if(args.length != NUM_ARGS) {
-//            System.out.println(USAGE_MSG);
-//            System.exit(FAILURE);
-//        }
-//        try{
-//            port = Integer.parseInt(args[0]);
-//            size = Integer.parseInt(args[1]);
-//        } catch(NumberFormatException nfe) {
-//            System.err.println("Invalid argument type. Arguments must be of integers.");
-//            System.exit(FAILURE);
-//        }
-//
-//        // Creates a BattleServer and starts it listening for connections
-//        // TODO Figure out how the size is used in this driver.
-//        BattleServer bs = new BattleServer(port);
-//        bs.listen();
-//
-//        // If we made it here, then we can successfully exit
-//        System.exit(SUCCESS);
+        // Creates a BattleServer and starts it listening for connections
+        // TODO Figure out how the size is used in this driver.
+        BattleServer bs = new BattleServer(port);
+        bs.listen();
+        // If we made it here, then we can successfully exit
+        System.exit(SUCCESS);
+*/
+        // TODO Might be best to have a while loop here that continually waits
+        //      for input and when the next command is a legal command then
+        //      execute it (like /join or /play) by calling the correct
+        //      method from Game class. Maybe have the Game class control
+        //      handling user input after the /play command has been issued?
         try {
             Scanner info = new Scanner(System.in);
             System.out.println("Enter Player1 NickName");
