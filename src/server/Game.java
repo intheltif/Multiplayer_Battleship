@@ -7,7 +7,8 @@ import java.util.Random;
 /**
  * Contains the logic for the game of BattleShip. Has a Grid for each client.
  *
- * @author Evert Ball and Carlee Yancey
+ * @author Evert Ball 
+ * @author Carlee Yancey
  * @version 18 November 2019
  */
 public class Game {
@@ -22,6 +23,8 @@ public class Game {
 
     /** A hashmap */
     private HashMap<String, Grid> playerMap;
+
+    private ArrayList<String> players;
 
     /**
      * This constructor creates a game with a grid of a given size.
@@ -43,8 +46,17 @@ public class Game {
     public void join(String nickname) {
 
         this.playerMap.put(nickname, new Grid());
+        this.players.add(nickname);
 
     } // end join method
+
+    public void leave(String nickname) {
+        if(playerMap.contains(nickname)) {
+            this.playerMap.remove(nickname);
+        }
+        if(players.contains(nickname)) {
+            this.players.remove(nickname);
+        }
 
 
     /**
