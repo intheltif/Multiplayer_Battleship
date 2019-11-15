@@ -231,25 +231,96 @@ public class Game {
     } // end setTotalShips method
 
     public void placeShips(String nickname){
-        //TODO place the ships bassed on the total ships.
+        //TODO Decouple logic to create ships to their own methods
         String[][] board = getGrid(nickname).getBoard();
         Random r = new Random();
+        int randShipType = r.nextInt(5);
         for(int i=0; i < getTotalShips(); i++) {
-           switch(r.nextInt(5)) {
+           switch(randShipType) {
                case 0:
-                   //TODO Add Carrier to board
+                   int oldRow = -1;
+                   int oldCol = -1;
+                   for(int i=0; i < ship.CARRIER.getSize(); i++) {
+                       int row = r.nextInt(board.length);
+                       while(row == oldRow) {
+                           row = r.nextInt(board.length);
+                       }
+                       oldRow = row;
+                       int col = r.nextInt(board[row].length);
+                       while(col == oldCol) {
+                           col = r.nextInt(board[row].length);
+                       }
+                       oldCol = col;
+                       board[row][col] = "C"
+                   }
                    break;
                case 1:
-                   //TODO Add Battleship to board
+                   int oldRow = -1;
+                   int oldCol = -1;
+                   for(int i=0; i < ship.BATTLESHIP.getSize(); i++) {
+                       int row = r.nextInt(board.length);
+                       while(row == oldRow) {
+                           row = r.nextInt(board.length);
+                       }
+                       oldRow = row;
+                       int col = r.nextInt(board[row].length);
+                       while(col == oldCol) {
+                           col = r.nextInt(board[row].length);
+                       }
+                       oldCol = col;
+                       board[row][col] = "B"
+                   }
                    break;
                case 2:
-                   //TODO Add Cruiser to board
+                   int oldRow = -1;
+                   int oldCol = -1;
+                   for(int i=0; i < ship.CRUISER.getSize(); i++) {
+                       int row = r.nextInt(board.length);
+                       while(row == oldRow) {
+                           row = r.nextInt(board.length);
+                       }
+                       oldRow = row;
+                       int col = r.nextInt(board[row].length);
+                       while(col == oldCol) {
+                           col = r.nextInt(board[row].length);
+                       }
+                       oldCol = col;
+                       board[row][col] = "R"
+                   }
                    break;
                case 3:
-                   //TODO Add Submarine to board
+                   int oldRow = -1;
+                   int oldCol = -1;
+                   for(int i=0; i < ship.SUBMARINE.getSize(); i++) {
+                       int row = r.nextInt(board.length);
+                       while(row == oldRow) {
+                           row = r.nextInt(board.length);
+                       }
+                       oldRow = row;
+                       int col = r.nextInt(board[row].length);
+                       while(col == oldCol) {
+                           col = r.nextInt(board[row].length);
+                       }
+                       oldCol = col;
+                       board[row][col] = "S"
+                   }
                    break;
                case 4:
-                   //TODO Add Destroyer to board
+                   int oldRow = -1;
+                   int oldCol = -1;
+                   for(int i=0; i < ship.DESTROYER.getSize(); i++) {
+                       int row = r.nextInt(board.length);
+                       while(row == oldRow) {
+                           row = r.nextInt(board.length);
+                       }
+                       oldRow = row;
+                       int col = r.nextInt(board[row].length);
+                       while(col == oldCol) {
+                           col = r.nextInt(board[row].length);
+                       }
+                       oldCol = col;
+                       board[row][col] = "D"
+                   }
                    break;
                default:
                    System.out.println("Outside range of ship types");
