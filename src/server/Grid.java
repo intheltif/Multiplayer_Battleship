@@ -75,7 +75,8 @@ public class Grid {
                     System.out.print(this.board[i-1][j] + " | ");
                 }
             }
-            System.out.println("\n  +---+---+---+---+---+---+---+---+---+---+ ");
+            System.out.println("\n  +---+---+---+---+---+---+---+---+---+--" +
+                    "-+ ");
         }
     }
 
@@ -83,7 +84,27 @@ public class Grid {
      * Prints the grid with only hits and misses.
      */
     public void printPartialGrid() {
-        //TODO Print the grid w/o ships.
+        for(int i = 0; i < this.board.length + 1; i++){
+            if(i != 0) {
+                System.out.print((i - 1) + " | ");
+            }
+            for(int j = 0; j < this.board.length; j++){
+                if(i == 0){
+                    if(j == 0){
+                        System.out.print("    " + j + "   ");
+                    }else {
+                        System.out.print(j + "   ");
+                    }
+                }else {
+                    if(this.board[i-1][j].equals("@") ||
+                            this.board[i-1][j].equals("X")) {
+                        System.out.print(this.board[i - 1][j] + " | ");
+                    }
+                }
+            }
+            System.out.println("\n  +---+---+---+---+---+---+---+---+---+-" +
+                    "--+");
+        }
     }
 
     /**
@@ -114,4 +135,5 @@ public class Grid {
         grid.setUpBoard();
         grid.printGrid();
     }
+
 } // end Grid class

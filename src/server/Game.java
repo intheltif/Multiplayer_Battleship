@@ -2,6 +2,8 @@ package server;
 
 import common.Player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -30,8 +32,6 @@ public class Game {
      * This constructor creates a game with a grid of a given size.
      *
      * @param size The size of the grid.
-     * @param name The name of Player One.
-     * @param name2 The name of Player Two
      */
     public Game(int size){
         this.setTotalShips(size);
@@ -42,29 +42,30 @@ public class Game {
      * Adds a new player to the game.
      *
      * @param nickname The chosen nickname for the player.
+     * @param size This is the grid size to be made.
      */
-    public void join(String nickname) {
-
-        this.playerMap.put(nickname, new Grid());
+    public void join(String nickname,int size) {
+        this.playerMap.put(nickname, new Grid(size));
         this.players.add(nickname);
 
     } // end join method
 
     public void leave(String nickname) {
-        if(playerMap.contains(nickname)) {
+        if (playerMap.contains(nickname)) {
             this.playerMap.remove(nickname);
         }
-        if(players.contains(nickname)) {
+        if (players.contains(nickname)) {
             this.players.remove(nickname);
         }
-
+    }
 
     /**
      * Returns the current grid for player that is passed in..
      *
      * @return The current grid for player.
      */
-    public Grid getGrid(Player player) {
+    public Grid getGrid(String player) {
+        //TODO make it return the correct grid using the HashMap
         return player.getGrid();
     } // end getGrid method
 
@@ -74,6 +75,7 @@ public class Game {
      * @return the number of ships for player.
      */
     public int getPlayerTotal(Player player) {
+        //TODO make it return the correct grid to corrent map.
         return player.getNumShips();
     } // end getPlayerTotal method
 
@@ -114,7 +116,7 @@ public class Game {
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      */
-    public void hit(Player player, int row, int column){
+    public void hit(String nickname, int row, int column){
         String[][] board = player.getGrid().getBoard();
         boolean valid = validHit(player, row, column);
         if(valid){
@@ -130,7 +132,7 @@ public class Game {
      * @param ship The ship to clear.
      * @param player The player from which to get the grid that is being checked.
      */
-    public void clearShip(Ship ship, Player player){
+    public void clearShip(Ship ship,){
         String shipToRemove = ship.getShip();
         String[][] board = player.getGrid().getBoard();
         for(int i = 0; i < board.length; i++){
@@ -152,6 +154,7 @@ public class Game {
      */
     public boolean isGameOver(){
         boolean over;
+        shipDestroyed();
         if(this.player1.getNumShips() == 0){
             over = true;
             System.out.println(this.player2.getName() + " WINS!");
@@ -164,11 +167,6 @@ public class Game {
         return over;
     } // end isGameOver method
 
-    //TODO It might be good to have one method that checks if a ship is
-    //     destoryed and we just pass in a player. This allows any number of 
-    //     players to exist and the method won't have to be replicated for
-    //     each one.
-
     /**
      * Checks to see if a certain ship is destroyed on a given player's board.
      *
@@ -176,6 +174,7 @@ public class Game {
      * @param player The player from which to get the board that is being checked.
      */
     public void shipDestroyed(Ship ship, Player player) {
+        //TODO make this work were it checks all ships. and works for all players at once.
         int hits = 0;
         String look = ship.getShip();
         String[][] board = player.getGrid().getBoard();
@@ -213,4 +212,21 @@ public class Game {
             this.totalShips = r.nextInt(2 - 1) + 1;
         }
     } // end setTotalShips method
+
+    public void placeShips(){
+        //TODO place the ships bassed on the total ships.
+    }
+
+    public void show(String nickname, String current){
+        // "/show <username>
+        if(current.equals(nickname)){
+            //TODO make sure it prints the board with ships on it
+            Grid show = game.getGrid(nickname);
+            show.printGrid();
+        }else{
+            //TODO make sure it prints the board with no ships
+            Grid show = game.getGrid(nickname);
+            show.printPartialGrid();
+        }
+    }
 } // end Game class
