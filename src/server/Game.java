@@ -111,7 +111,7 @@ public class Game {
         boolean valid;
         String[][] board = getGrid(player).getBoard();
         String hit = board[row][column];
-        if(hit.equals(" ") || hit.equals(MISS)){
+        if(hit.equals(" ")){
             valid = false;
         }else{
             valid = true;
@@ -127,16 +127,21 @@ public class Game {
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      */
-    public void hit(String nickname, int row, int column){
+    public boolean hit(String nickname, int row, int column){
         String[][] board = getGrid(nickname).getBoard();
+        boolean attacked;
         boolean valid = validHit(nickname, row, column);
-        if(board[row][column].equals("@")|| board[row][column].equals("@")){
+        if(board[row][column].equals("@")|| board[row][column].equals("X")){
             System.out.println("INVALID MOVE");
+            attacked = false;
         }else if(valid){
             board[row][column] = HIT;
+            attacked = true;
         }else{
             board[row][column] = MISS;
+            attacked = true;
         }
+        return attacked;
     } // end hit method
 
     /**
