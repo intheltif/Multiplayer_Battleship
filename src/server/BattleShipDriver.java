@@ -1,7 +1,5 @@
 package server;
 
-import common.Player;
-
 import java.util.Scanner;
 
 /**
