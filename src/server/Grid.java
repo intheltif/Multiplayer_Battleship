@@ -75,8 +75,12 @@ public class Grid {
                     System.out.print(this.board[i-1][j] + " | ");
                 }
             }
-            System.out.println("\n  +---+---+---+---+---+---+---+---+---+--" +
-                    "-+ ");
+            System.out.print("\n  +---");
+            for (int k = 1; k < this.board.length ; k++) {
+                System.out.print("+---");
+
+            }
+            System.out.println("+");
         }
     }
 
@@ -99,11 +103,16 @@ public class Grid {
                     if(this.board[i-1][j].equals("@") ||
                             this.board[i-1][j].equals("X")) {
                         System.out.print(this.board[i - 1][j] + " | ");
+                    }else{
+                        System.out.print(" " + " | ");
                     }
                 }
             }
-            System.out.println("\n  +---+---+---+---+---+---+---+---+---+-" +
-                    "--+");
+            System.out.print("\n  +---");
+            for (int k = 1; k < this.board.length ; k++) {
+                System.out.print("+---");
+            }
+            System.out.println("+");
         }
     }
 
@@ -133,7 +142,7 @@ public class Grid {
     public static void main(String[] args) {
         Grid grid = new Grid();
         grid.setUpBoard();
-        grid.printGrid();
+        grid.printPartialGrid();
     }
 
 } // end Grid class
