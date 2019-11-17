@@ -328,6 +328,10 @@ public class Game {
         } // end for loop
     } // end placeShips method
 
+    public void placeShipType(Ship ship, String[][] board) {
+
+    } // end placeShipType
+
 
     public void show(String nickname, String current){
         // "/show <username>
