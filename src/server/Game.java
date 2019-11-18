@@ -167,7 +167,6 @@ public class Game {
         for (int i = 0; i < getNumPlayers(); i++) {
             if(i == 0 || !over){
                 over = shipDestroyed(this.players.get(i));
-                System.out.println("Entered First if " + over);
                 if (over) {
                     loser = this.players.get(i);
                 }
