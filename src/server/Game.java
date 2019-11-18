@@ -1,7 +1,5 @@
 package server;
 
-import common.Player;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -23,9 +21,10 @@ public class Game {
     /** The number of ships each player gets */
     private int totalShips;
 
-    /** A hashmap */
+    /** A HashMap */
     private HashMap<String, Grid> playerMap;
 
+    /** ArrayList of the games players */
     private ArrayList<String> players;
 
     /**
@@ -62,12 +61,12 @@ public class Game {
     }
 
     /**
-     * Returns the current grid for player that is passed in..
+     * Returns the current grid for player that is passed in.
      *
+     * @param player The player of the grid we need.
      * @return The current grid for player.
      */
     public Grid getGrid(String player) {
-        //TODO make it return the correct grid using the HashMap
         return this.playerMap.get(player);
     } // end getGrid method
 
@@ -78,7 +77,7 @@ public class Game {
      */
     public int getTotalShips() {
         return this.totalShips;
-    } // end getTotalShips method
+    }
     
     /**
      * Returns the number of players currently playing
@@ -93,7 +92,8 @@ public class Game {
     /**
      * Checks to see if coordinates given by a player are a valid hit.
      *
-     * @param player The player from which to get the grid that is being checked.
+     * @param player The player from which to get the grid that is being
+     *               checked.
      * @param row The row of the Grid.
      * @param column The column of the Grid.
      * @return True if the coordinates hit a ship, false otherwise.
@@ -112,11 +112,13 @@ public class Game {
 
     /**
      * Places a hit or a miss on the board based on whether the given 
-     * coordiantes were a valid hit.
+     * coordinates were a valid hit.
      *
-     * @param nickname The player from which to get the grid that is being checked.
+     * @param nickname The player from which to get the grid that is being
+     *                 checked.
      * @param row The row of the Grid.
      * @param column The column of the Grid.
+     * @return attacked If the hit was successful.
      */
     public boolean hit(String nickname, int row, int column){
         String[][] board = getGrid(nickname).getBoard();
@@ -139,7 +141,8 @@ public class Game {
      * This method clears a certain ship from the grid.
      *
      * @param place The spots the ships is in.
-     * @param nickname The player from which to get the grid that is being checked.
+     * @param nickname The player from which to get the grid that is being
+     *                 checked.
      */
     public void clearShip(String nickname,ArrayList<Integer> place){
         String[][] board = getGrid(nickname).getBoard();
@@ -160,14 +163,17 @@ public class Game {
      */
     public boolean isGameOver(){
         boolean over = false;
-        String loser = " ";
-        for(int i = 0; i < getNumPlayers(); i++){
-            over = shipDestroyed(this.players.get(i));
-            if (over == true){
-                loser = this.players.get(i);
+        String loser = "";
+        for (int i = 0; i < getNumPlayers(); i++) {
+            if(i == 0 || !over){
+                over = shipDestroyed(this.players.get(i));
+                System.out.println("Entered First if " + over);
+                if (over) {
+                    loser = this.players.get(i);
+                }
             }
         }
-        if(over == true) {
+        if(over) {
             for (String name : this.players) {
                 if (!(loser.equals(name))){
                     System.out.println(name + " WINS!");
@@ -182,18 +188,24 @@ public class Game {
      *
      * @param player The player from which to get the board that is being
      *               checked.
+     * @return over If all the ships are destroyed.
      */
     public boolean shipDestroyed(String player) {
         boolean over = true;
         String[][] board = getGrid(player).getBoard();
         for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board.length; j++){
-                String item = board[i][j];
-                if(over == true) {
-                    if (!(item.equals(" ")) || !(item.equals("@")) ||
-                            !(item.equals("X"))) {
-                        over = false;
-                    }
+            for (int j = 0; j < board[i].length; j++) {
+                String value = board[i][j];
+                if(value.equals(Ship.BATTLESHIP.getShip())){
+                    over = false;
+                }else if (value.equals(Ship.CARRIER.getShip())){
+                    over = false;
+                }else if (value.equals(Ship.CRUISER.getShip())){
+                    over = false;
+                }else if (value.equals(Ship.DESTROYER.getShip())){
+                    over = false;
+                }else if (value.equals(Ship.SUBMARINE.getShip())){
+                    over = false;
                 }
             }
         }
@@ -261,25 +273,27 @@ public class Game {
      * @param current Who turn it currently is.
      */
     public void show(String nickname, String current){
-        if(current.equals(nickname)){
-            Grid show = getGrid(nickname);
-            show.printGrid();
-        }else{
-            Grid show = getGrid(nickname);
-            show.printPartialGrid();
+        if (this.players.contains(nickname)) {
+            if (current.equals(nickname)) {
+                Grid show = getGrid(nickname);
+                show.printGrid();
+            } else {
+                Grid show = getGrid(nickname);
+                show.printPartialGrid();
+            }
         }
     }
 
     /**
-     * Determines who's turn it currenlly is based of the number of turns.
+     * Determines who's turn it currently is based of the number of turns.
      *
      * @param turns The turn number.
      * @return Who's turn of the game.
      */
     public String turn(int turns){
         int turn = turns % getNumPlayers();
-        String current = this.players.get(turn);
-        return current;
+        return this.players.get(turn);
+
     }
 
     /**
@@ -342,7 +356,7 @@ public class Game {
                 }
             }
             if(row >= board.length || col >= board.length || row < 0
-                    || col < 0){
+                    || col < 0 || !(board[row][col].equals( " "))){
                 clearShip(nickname,place);
                 j = -1;
                 row = r.nextInt(board.length);
@@ -350,31 +364,19 @@ public class Game {
                 oldCol = col;
                 oldRow = row;
                 place.clear();
-            }else if (board[row][col].equals(" ")) {
+            }else if (board[row][col].equals(" ")){
                 board[row][col] = ship.getShip();
                 place.add(row);
                 place.add(col);
                 oldRow = row;
                 oldCol = col;
-            } else {
-                clearShip(nickname, place);
-                j = -1;
-                row = r.nextInt(board.length);
-                col = r.nextInt(board.length);
-                oldCol = col;
-                oldRow = row;
-                place.clear();
             }
         }
-    }
+    }//end of singlePlaceShip
 
-    /**
-     * Used for testing
-     */
     public static void main(String[] args){
         Game g = new Game(10);
         g.join("rob", 10);
-        g.show("rob", "rob");
+        g.show("rob","rob");
     }
-
 } // end Game class
