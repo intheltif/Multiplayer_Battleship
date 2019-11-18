@@ -266,11 +266,6 @@ public class Game {
         } // end for loop
     } // end placeShips method
 
-    public void placeShipType(Ship ship, String[][] board) {
-
-    } // end placeShipType
-
-
     /**
      * Shows the correct board for the player.
      *
@@ -311,25 +306,22 @@ public class Game {
     public void singlePlaceShip(Ship ship, String[][] board, String nickname){
         Random r = new Random();
         ArrayList<Integer> place = new ArrayList<>();
-        int oldRow = -1;
-        int oldCol = -1;
-        int way = -1;
-        int row = -1;
-        int col = -1;
+        int oldRow, oldCol, way, row, col;
+        oldRow = oldCol = way = row = col = -1;
         int direction = r.nextInt(2);
         for(int j = 0; j < ship.getSize(); j++) {
             if (j == 0) {
                 row = r.nextInt(board.length);
-            } else if (direction == 1) {
+            } else if (direction == 1) { // if dir=1, keep row
                 row = oldRow;
-            }else {
+            }else { // if dir=0, find a row
                 if(j == 1){
                     if(oldRow > (board.length / 2)){
                         row = oldRow-1;
-                        way = 0;
+                        way = 0; // way=0 --> go west
                     }else{
                         row = oldRow+1;
-                        way = 1;
+                        way = 1; // way=1 --> go east
                     }
                 }else if( j > 1){
                     if(way == 0){
