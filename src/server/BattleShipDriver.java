@@ -104,6 +104,9 @@ public class BattleShipDriver {
                     System.out.println("!!! " + player[1] + "has joined the " +
                             "game");
                     joined++;
+                } else if(player[0].equals("/quit")) {
+                    System.out.println("Thanks for playing!");
+                    System.exit(SUCCESS);
                 }
             }
             info.close(); //Closes the scanner
@@ -157,6 +160,7 @@ public class BattleShipDriver {
                         break;
                     case "/quit":
                         //TODO Put the steps in for what happens if quited.
+                        System.exit(SUCCESS);
                         break;
                 }
             }
