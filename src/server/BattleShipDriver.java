@@ -21,8 +21,8 @@ public class BattleShipDriver {
     private static final int NUM_ARGS = 2;
     
     /** Usage message to print when program is used incorrectly */
-    private static final String USAGE_MSG = ("Usage is: java BattleShipDriver " +
-            "<port> <board_size>)");
+    private static final String USAGE_MSG = ("Usage is: java " +
+            "BattleShipDriver <port> <board_size>)");
 
     
     /**
@@ -71,6 +71,10 @@ public class BattleShipDriver {
             Scanner info = new Scanner(System.in);
             System.out.println("Enter Size of preferred grid 5-10");
             int size = info.nextInt();
+            while(size > 10){
+                System.out.println("Size must be between 5 - 10");
+                size = info.nextInt();
+            }
             int joined = 0;
             boolean started = false;
             Game game = new Game(size);
@@ -97,7 +101,7 @@ public class BattleShipDriver {
                     }
                 } else if (player[0].equals("/join")){
                     game.join(player[1], size);
-                    System.out.println("!!! " + player[1] + "has joined the  +" +
+                    System.out.println("!!! " + player[1] + "has joined the " +
                             "game");
                     joined++;
                 }
@@ -108,10 +112,16 @@ public class BattleShipDriver {
         }
     } // end main method
 
-
-    public static void play(Scanner scan, Game game){
+    /**
+     * This method runs the game with a given scanner and game.
+     * @param scan The scanner that is being used.
+     * @param game The current game in play.
+     */
+    private static void play(Scanner scan, Game game){
         String current;
         int turns = 0;
+        int attAgr = 4;
+        int showArgs = 2;
         do{//Quit if a board has no ships left
             current = game.turn(turns);
             System.out.println(current + " it is you turn");
@@ -122,10 +132,10 @@ public class BattleShipDriver {
                 String info = com[0];
                 switch (info) {
                     case "/attack":
-                        if(com.length == 4) {
-                            if(current.equals(com [1]) == false) {
+                        if(com.length == attAgr) {
+                            if(!current.equals(com[1])) {
                                 attacked = attack(game, com);
-                                if(attacked == false){
+                                if(!attacked){
                                     System.out.println("Move Failed, player " +
                                             "turn: " + current);
                                 }else{
@@ -138,7 +148,7 @@ public class BattleShipDriver {
                         }
                         break;
                     case "/show":
-                        if (com.length == 2) {
+                        if (com.length == showArgs) {
                             game.show(com[1], current);
 
                         }else{
@@ -151,7 +161,7 @@ public class BattleShipDriver {
                 }
             }
             turns++;
-           } while(game.isGameOver() == false);
+           } while(!game.isGameOver());
     }
 
     /**
@@ -161,7 +171,7 @@ public class BattleShipDriver {
      * @param command Information that way entered.
      * @return If the attack was complete.
      */
-    public static boolean attack(Game game, String[] command){
+    private static boolean attack(Game game, String[] command){
         int row = Integer.parseInt(command[3]);
         int column = Integer.parseInt(command[2]);
         String nickname  = command[1];
