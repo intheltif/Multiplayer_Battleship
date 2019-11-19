@@ -71,7 +71,7 @@ public class BattleShipDriver {
             Scanner info = new Scanner(System.in);
             System.out.println("Enter Size of preferred grid 5-10");
             int size = info.nextInt();
-            while(size > 10){
+            while(size > 10 || size < 5){
                 System.out.println("Size must be between 5 - 10");
                 size = info.nextInt();
             }
@@ -82,12 +82,20 @@ public class BattleShipDriver {
                 String command = info.next().concat(info.nextLine());
                 String[] player = command.trim().split("\\s+");
                 if(player[0].equals("/join")){
-                    game.join(player[1], size);
+                    try{
+                        game.join(player[1], size);
+                    } catch(IndexOutOfBoundsException ioobe) {
+                        System.out.println("Usage: /join <username>");
+                        continue;
+                    }
                     System.out.println("!!! " + player[1] + " has joined the " +
                             "game");
                     joined++;
                 }else if(player[0].equals("/play")){
                     System.out.println("Not enough players to play the game");
+                } else if(player[0].equals("/quit")){
+                    System.out.println("Thanks for playing!");
+                    System.exit(SUCCESS);
                 }
             }
             while(!(started)) {//Game is able to start or more clients can join
@@ -96,7 +104,7 @@ public class BattleShipDriver {
                 if (player[0].equals("/play")) {
                     if (joined >= 2) {
                         System.out.println("The game begins");
-                        play(info, game);
+                        play(info, game, size);
                         started = true;
                     }
                 } else if (player[0].equals("/join")){
@@ -120,7 +128,7 @@ public class BattleShipDriver {
      * @param scan The scanner that is being used.
      * @param game The current game in play.
      */
-    private static void play(Scanner scan, Game game){
+    private static void play(Scanner scan, Game game, int size){
         String current;
         int turns = 0;
         int attAgr = 4;
@@ -133,8 +141,28 @@ public class BattleShipDriver {
                 String command = scan.next().concat(scan.nextLine());
                 String[] com = command.trim().split("\\s+");
                 String info = com[0];
+                int col = -1;
+                int row = -1;
                 switch (info) {
                     case "/attack":
+                        try{
+                            col = Integer.parseInt(com[2]);
+                            row = Integer.parseInt(com[3]);
+                        } catch(NumberFormatException nfe) {
+                            System.out.println("Attack coordinates must be " + 
+                                "integers.");
+                            continue;
+                        } catch(ArrayIndexOutOfBoundsException aioobe) {
+                            System.out.println("Usage: /attack <player> " + 
+                                "<col> <row>");
+                            continue;
+                        }
+                        if(col > (size - 1) || row > (size - 1) ||
+                            col < 0 || row < 0) {
+                            System.out.println("Usage: /attack <player> " + 
+                                "<col> <row>");
+                            continue;
+                        }
                         if(com.length == attAgr) {
                             if(!current.equals(com[1])) {
                                 attacked = attack(game, com);

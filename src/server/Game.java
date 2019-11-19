@@ -100,8 +100,15 @@ public class Game {
      */
     public boolean validHit(String player, int row, int column){
         boolean valid;
+        String hit = "";
         String[][] board = getGrid(player).getBoard();
-        String hit = board[row][column];
+        try{
+            hit = board[row][column];
+        } catch(IndexOutOfBoundsException ioobe) {
+            System.out.println("Invalid Attack Coordinates. Please choose " +
+                " valid coordinates.");
+            return false;
+        }
         if(hit.equals(" ")){
             valid = false;
         }else{
