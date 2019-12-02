@@ -1,3 +1,10 @@
+package common;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.Scanner;
+
 /**
  * TODO Finish this documentation and do documentation for each 
  *      method/constructor
@@ -6,7 +13,8 @@
  * from remote hosts. It can play the role of the &quot;subject&quot; in an
  * instance of the observer pattern. This class is also threadable.
  *
- * @author Evert Ball and Carlee Yancey
+ * @author Evert Ball
+ * @author Carlee Yancey
  * @version 18 November 2019
  */
 public class ConnectionAgent extends MessageSource implements Runnable {
@@ -22,33 +30,51 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     public ConnectionAgent(Socket socket) {
         //TODO Not certain this is the correct implementation. 
         //     Going with it for now.
-        this.socket = socket;
-        this.out = System.out
-        this.in = new Scanner(out);
-        this.thread = new Thread();
+        try {
+            this.socket = socket;
+            this.out = new PrintStream(socket.getOutputStream());
+            this.in = new Scanner(socket.getInputStream());
+            this.thread = new Thread(this); // TODO This feels right?
+        } catch(IOException ioe){
+
+        }
     } // end ConnectionAgent constructor w/ socket
 
     public void sendMessage(String message) {
 
-        //TODO Finish sendMessage method
+        out.println(message);
 
     } // end sendMessage method
 
+    /**
+     * Returns whether or not this <code>ConnectionAgent</code> is connected to
+     * a host
+     *
+     * @return True if connected to a remote host, false otherwise
+     */
     public boolean isConnected() {
         
-        //TODO Finish isConnected method
+        return this.socket.isConnected();
 
     } // end isConnected method
 
+    /**
+     * Closes the connection between two hosts.
+     */
     public void close() {
-        
-        //TODO Finish close method
+        try {
+            this.socket.close();
+        } catch( IOException ioe) {
+            System.out.println("Failure closing connection. IO Error.");
+        }
 
     } // end close method
 
     public void run() {
-        
-        //TODO Finish run method
+        // TODO Still more to do here but IDK what yet
+        if(this.in.hasNext()) {
+            sendMessage(this.in.next());
+        }
 
     } // end run method
 

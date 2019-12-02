@@ -1,3 +1,8 @@
+import common.MessageListener;
+import common.MessageSource;
+
+import java.io.PrintStream;
+
 /**
  * Responsible for writing messages to a <code>PrintStream</code>
  * (e.g., <code>System.out</code>). It implements the role of an observer in 

@@ -1,5 +1,12 @@
 package server;
 
+import common.*;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+
 /**
  * Implements the server-side logic of the Battleship application. This class
  * is responsible for accepting incoming connections, creating 
@@ -22,21 +29,51 @@ public class BattleServer implements MessageListener {
 
     private Game game;
 
+    private ArrayList<ConnectionAgent> conAgentCollection;
+
     public BattleServer(int port) {
-    
-        //TODO Finish constructor
+
+        try {
+            this.serverSocket = new ServerSocket(port);
+            this.conAgentCollection = new ArrayList<>();
+            this.game = null;
+            this.current = -1;
+        } catch (IOException ioe) {
+            System.err.println("IO Error: " + ioe.getMessage());
+            //TODO Maybe handle a bit better
+        }
 
     } // end BattleServer constructor
 
+    /**
+     * Listens for connections from client devices that want to play a game.
+     */
     public void listen() {
+        while (!this.serverSocket.isClosed()) {
+            try {
+                ConnectionAgent agent = new ConnectionAgent(this.serverSocket.accept());
+                conAgentCollection.add(agent);
 
-        //TODO finish listen method
-        
+
+
+
+                // TODO What to do from here?
+
+            } catch (IOException ioe) {
+                System.out.println("IO Exception Occurred.");
+            } // end try-catch
+    } // end while loop
+
     } // end listen method
 
     public void broadcast(String message) {
 
-        //TODO finish broadcast method
+        // Send message to all CAs currently connected.
+        for(ConnectionAgent agent : conAgentCollection) {
+            if(agent.isConnected()) {
+                agent.sendMessage(message);
+            }
+        }
         
     } // end broadcast method
 
