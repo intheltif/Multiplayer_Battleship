@@ -54,9 +54,6 @@ public class BattleServer implements MessageListener {
                 ConnectionAgent agent = new ConnectionAgent(this.serverSocket.accept());
                 conAgentCollection.add(agent);
 
-
-
-
                 // TODO What to do from here?
 
             } catch (IOException ioe) {

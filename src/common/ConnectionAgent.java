@@ -34,7 +34,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             this.socket = socket;
             this.out = new PrintStream(socket.getOutputStream());
             this.in = new Scanner(socket.getInputStream());
-            this.thread = new Thread(this); // TODO This feels right?
+            this.thread = new Thread(this);
+            this.thread.start();
         } catch(IOException ioe){
 
         }
@@ -71,10 +72,11 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     } // end close method
 
     public void run() {
-        // TODO Still more to do here but IDK what yet
-        if(this.in.hasNext()) {
-            sendMessage(this.in.next());
-        }
+
+        // create InputStreams
+        // while connected
+            // use InputStream to get input
+        //
 
     } // end run method
 
