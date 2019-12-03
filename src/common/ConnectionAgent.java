@@ -104,4 +104,13 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         return this.in;
     }
 
+    /**
+     * This method gets the connection agents PrintStream
+     *
+     * @return The PrintStream.
+     */
+    public PrintStream getOut(){
+        return this.out;
+    }
+
 } // end ConnectionAgent class
