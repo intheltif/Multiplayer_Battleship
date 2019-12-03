@@ -37,8 +37,7 @@ public class BattleShipDriver {
      *             10x10) since our application assumes square boards.
      */
     public static void main(String[] args) {
-/*
-        int port;
+        int port = -1;
         int size;
         // Validate correct number of arguments.
         if(args.length != NUM_ARGS) {
@@ -55,11 +54,15 @@ public class BattleShipDriver {
         }
 
         // Creates a BattleServer and starts it listening for connections
+        if(port == -1 ) {
+            System.out.println("The port was not initialized...");
+            System.exit(FAILURE);
+        }
         BattleServer bs = new BattleServer(port);
         bs.listen();
         // If we made it here, then we can successfully exit
         System.exit(SUCCESS);
-*/
+/*
         try {
             Scanner info = new Scanner(System.in);
             System.out.println("Enter Size of preferred grid 5-10");
@@ -114,6 +117,7 @@ public class BattleShipDriver {
         }catch (IllegalArgumentException e){
             System.out.println(e.toString());
         }
+ */
     } // end main method
 
     /**
