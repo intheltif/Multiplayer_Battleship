@@ -106,7 +106,10 @@ public class BattleServer implements MessageListener {
      */
     public void sourceClosed(MessageSource source) {
 
-        source.removeMessageListener(this);
+        // Remove the subject from all collections/maps associated with it
+        conAgentCollection.remove(source);
+        userToConnectionAgentMap.remove(source);
+        connectionAgentToUserMap.remove(source);
 
     } // end sourceClosed method
 
