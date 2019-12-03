@@ -53,6 +53,7 @@ public class BattleClient extends MessageSource implements MessageListener  {
         this.agent = new ConnectionAgent(socket);
         this.connect();
         super.addMessageListener(this);
+        this.print = new PrintStreamMessageListener(agent.getOut());
     } // end constructor
 
     /**
@@ -102,6 +103,8 @@ public class BattleClient extends MessageSource implements MessageListener  {
     public void messageReceived(String message, MessageSource source) {
         //TODO Finish method, ?where it prints the message of this curtain client
         // or is this with the PrintStreamMessageListener?
+        //agent.getOut().print(message);
+        print.messageReceived(message,source);
     } //end messageReceived
 
     /**
