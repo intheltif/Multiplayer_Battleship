@@ -207,6 +207,11 @@ public class BattleShipDriver {
         return game.hit(nickname, row, column);
     }
 
+    public static void commandChoose(String command){
+        String comm = command;
+
+    }
+
 
 
 

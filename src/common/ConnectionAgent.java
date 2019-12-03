@@ -33,6 +33,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         try {
             this.socket = socket;
             this.out = new PrintStream(socket.getOutputStream());
+            //this.out = new PrintStream((System.out));
             this.in = new Scanner(socket.getInputStream());
             this.thread = new Thread(this);
             this.thread.start();
@@ -40,15 +41,16 @@ public class ConnectionAgent extends MessageSource implements Runnable {
 
         }
     } // end ConnectionAgent constructor w/ socket
-
+    public Socket getSocket(){
+        return this.socket;
+    }
     /**
      * Sends a message as a String between hosts.
      * @param message The message to send between hosts.
      */
     public void sendMessage(String message) {
-
-        out.println(message);
-
+        this.out.println(message);
+        this.out.flush();
     } // end sendMessage method
 
     /**
@@ -58,7 +60,6 @@ public class ConnectionAgent extends MessageSource implements Runnable {
      * @return True if connected to a remote host, false otherwise
      */
     public boolean isConnected() {
-        
         return this.socket.isConnected();
 
     } // end isConnected method
@@ -86,7 +87,13 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             BufferedReader buffReader = new BufferedReader(inputStream);
             while(isConnected()) {
                 String message = buffReader.readLine();
-                sendMessage(message);
+                while(message != null){
+                    //System.out.println("Read in thread" + message);
+                    notifyReceipt(message);
+                    out.flush();
+                }
+                //sendMessage(message);
+
             }
         } catch (IOException ioe) {
             System.err.println("IOException in the thread.");

@@ -52,7 +52,7 @@ public class BattleClient extends MessageSource implements MessageListener  {
         Socket socket = new Socket(this.getHostname(), this.port);
         this.agent = new ConnectionAgent(socket);
         this.connect();
-        super.addMessageListener(this);
+        addMessageListener(this);
         this.print = new PrintStreamMessageListener(agent.getOut());
     } // end constructor
 
@@ -105,6 +105,8 @@ public class BattleClient extends MessageSource implements MessageListener  {
         // or is this with the PrintStreamMessageListener?
         //agent.getOut().print(message);
         print.messageReceived(message,source);
+        agent.getOut().flush();
+        System.out.println("Message received in client: " + message);
     } //end messageReceived
 
     /**

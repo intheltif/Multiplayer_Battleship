@@ -38,7 +38,9 @@ public class PrintStreamMessageListener implements MessageListener {
      */
     public void messageReceived(String message, MessageSource source) {
         //TODO finish writing
-        this.out.print(message);
+        System.out.println(message);
+        this.out.println(message);
+        this.out.flush();
 
     } // end messageReceived method
 

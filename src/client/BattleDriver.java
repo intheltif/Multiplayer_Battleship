@@ -45,12 +45,20 @@ public class BattleDriver {
             //TODO How to handle the reading information from the keyboard
             // and sending them to the client.
             ConnectionAgent agent = client.getAgent();
-            while(agent.isConnected()){
-                Scanner scan = agent.getIn();
+            while(agent.isConnected()) {
                 //TODO using the scanner in connection agent, to read the messages that
                 // are received by the keyboard.
+                Scanner action = new Scanner(System.in);
+                String toDo = action.nextLine();
+                if(toDo.length() > 0){
+                    client.send(toDo);
+                }
+                Scanner scan = agent.getIn();
                 String command = scan.nextLine();
-                agent.sendMessage(command);
+                if (command.length() > 0) {
+                    client.messageReceived(command, client);
+                }
+
             }
 
         } catch (IOException e) {
