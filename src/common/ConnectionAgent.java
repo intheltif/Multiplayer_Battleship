@@ -5,9 +5,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
- * TODO Finish this documentation and do documentation for each 
- *      method/constructor
- *
  * A class that is responsible for sending messages to and receiving messages
  * from remote hosts. It can play the role of the &quot;subject&quot; in an
  * instance of the observer pattern. This class is also threadable.
@@ -40,6 +37,10 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         }
     } // end ConnectionAgent constructor w/ socket
 
+    /**
+     * Sends a message as a String between hosts.
+     * @param message
+     */
     public void sendMessage(String message) {
 
         out.println(message);
@@ -70,19 +71,22 @@ public class ConnectionAgent extends MessageSource implements Runnable {
 
     } // end close method
 
+    /**
+     * Run method that reads input while the socket is connected so that hosts
+     * can communicate through the socket.
+     */
     public void run() {
         try {
             InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
             BufferedReader buffReader = new BufferedReader(inputStream);
-            // while connected
             while(isConnected()) {
                 String message = buffReader.readLine();
                 sendMessage(message);
             }
-
         } catch (IOException ioe) {
-            //TODO Something
-        }
+            System.err.println("IOException in the thread.");
+            System.exit(1);
+        } // end try-catch
 
     } // end run method
 
