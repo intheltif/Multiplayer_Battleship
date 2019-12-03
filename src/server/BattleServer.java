@@ -3,9 +3,12 @@ package server;
 import common.*;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Implements the server-side logic of the Battleship application. This class
@@ -31,11 +34,17 @@ public class BattleServer implements MessageListener {
 
     private ArrayList<ConnectionAgent> conAgentCollection;
 
+    private HashMap<String, ConnectionAgent> userToConnectionAgentMap;
+
+    private HashMap<ConnectionAgent, String> connectionAgentToUserMap;
+
     public BattleServer(int port) {
 
         try {
             this.serverSocket = new ServerSocket(port);
             this.conAgentCollection = new ArrayList<>();
+            this.connectionAgentToUserMap = new HashMap<>();
+            this.userToConnectionAgentMap = new HashMap<>();
             this.game = null;
             this.current = -1;
         } catch (IOException ioe) {
@@ -51,8 +60,10 @@ public class BattleServer implements MessageListener {
     public void listen() {
         while (!this.serverSocket.isClosed()) {
             try {
-                ConnectionAgent agent = new ConnectionAgent(this.serverSocket.accept());
+                ConnectionAgent agent =
+                        new ConnectionAgent(this.serverSocket.accept());
                 conAgentCollection.add(agent);
+
 
                 // TODO What to do from here?
 
@@ -82,7 +93,8 @@ public class BattleServer implements MessageListener {
      */
     public void messageReceived(String message, MessageSource source) {
 
-        //TODO finish messageReceived method
+        ConnectionAgent ca = this.userToConnectionAgentMap.get(source);
+        ca.sendMessage(message);
 
     } // end messageReceived method
 
@@ -94,7 +106,7 @@ public class BattleServer implements MessageListener {
      */
     public void sourceClosed(MessageSource source) {
 
-        //TODO finish sourceClosed method
+        source.removeMessageListener(this);
 
     } // end sourceClosed method
 

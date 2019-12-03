@@ -15,12 +15,16 @@ import java.util.Scanner;
  */
 public class ConnectionAgent extends MessageSource implements Runnable {
 
+    /** Socket to connect to a separate host through */
     private Socket socket;
 
+    /** ??? */
     private Scanner in;
 
+    /** The stream to print output to */
     private PrintStream out;
 
+    /** The thread to start this thread running */
     private Thread thread;
 
     public ConnectionAgent(Socket socket) {
@@ -39,7 +43,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
 
     /**
      * Sends a message as a String between hosts.
-     * @param message
+     * @param message The message to send between hosts.
      */
     public void sendMessage(String message) {
 
@@ -75,6 +79,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
      * Run method that reads input while the socket is connected so that hosts
      * can communicate through the socket.
      */
+    @Override
     public void run() {
         try {
             InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
