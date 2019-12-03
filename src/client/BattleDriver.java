@@ -49,7 +49,7 @@ public class BattleDriver {
                 Scanner scan = agent.getIn();
                 //TODO using the scanner in connection agent, to read the messages that
                 // are received by the keyboard.
-                String command = scan.next().concat(scan.nextLine());
+                String command = scan.nextLine();
                 agent.sendMessage(command);
             }
 
