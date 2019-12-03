@@ -74,12 +74,24 @@ public class BattleServer implements MessageListener {
         
     } // end broadcast method
 
+    /**
+     * Used to notify observers that the subject has received a message.
+     *
+     * @param message The message received by the subject
+     * @param source  The source from which this message originated (if needed).
+     */
     public void messageReceived(String message, MessageSource source) {
 
         //TODO finish messageReceived method
 
     } // end messageReceived method
 
+    /**
+     * Used to notify observers that the subject will not receive new messages; observers can
+     * deregister themselves.
+     *
+     * @param source The <code>MessageSource</code> that does not expect more messages.
+     */
     public void sourceClosed(MessageSource source) {
 
         //TODO finish sourceClosed method

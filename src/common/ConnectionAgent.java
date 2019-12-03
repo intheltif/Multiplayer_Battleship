@@ -1,7 +1,6 @@
 package common;
 
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -72,11 +71,18 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     } // end close method
 
     public void run() {
+        try {
+            InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
+            BufferedReader buffReader = new BufferedReader(inputStream);
+            // while connected
+            while(isConnected()) {
+                String message = buffReader.readLine();
+                sendMessage(message);
+            }
 
-        // create InputStreams
-        // while connected
-            // use InputStream to get input
-        //
+        } catch (IOException ioe) {
+            //TODO Something
+        }
 
     } // end run method
 
