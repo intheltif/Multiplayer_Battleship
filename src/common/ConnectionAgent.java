@@ -80,4 +80,13 @@ public class ConnectionAgent extends MessageSource implements Runnable {
 
     } // end run method
 
+    /**
+     * This gets the scanner that the connection agent uses.
+     *
+     * @return The in scanner.
+     */
+    public Scanner getIn(){
+        return this.in;
+    }
+
 } // end ConnectionAgent class
