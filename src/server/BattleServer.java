@@ -63,6 +63,12 @@ public class BattleServer implements MessageListener {
                 ConnectionAgent agent =
                         new ConnectionAgent(this.serverSocket.accept());
                 conAgentCollection.add(agent);
+                if(agent.isConnected()) {
+                    System.out.println("Connected another!");
+                }
+
+                broadcast("Hello fuckers!");
+
 
 
                 // TODO What to do from here?
@@ -75,14 +81,17 @@ public class BattleServer implements MessageListener {
     } // end listen method
 
     public void broadcast(String message) {
+        System.out.println("I started broadcasting...");
 
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
+                System.out.println("Iffy Lube");
                 agent.sendMessage(message);
             }
         }
-        
+        System.out.println("I stopped broadcasting...");
+
     } // end broadcast method
 
     /**
