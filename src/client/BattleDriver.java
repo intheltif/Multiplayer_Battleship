@@ -42,33 +42,28 @@ public class BattleDriver {
         username = args[2];
         try {
             BattleClient client = new BattleClient(hostname,port,username);
-            //TODO How to handle the reading information from the keyboard
-            // and sending them to the client.
             ConnectionAgent agent = client.getAgent();
             while(agent.isConnected()) {
                 //TODO using the scanner in connection agent, to read the messages that
                 // are received by the keyboard.
                 Scanner action = new Scanner(System.in);
                 //String toDo = action.nextLine();
-                Scanner scan = agent.getIn();
-                String command = scan.nextLine();
-                if (command.length() > 0) {
-                    client.messageReceived(command, client);
-                }else {
+//                Scanner scan = agent.getIn();
+//                if (scan.hasNext()) {
+//                   // System.out.println("ENTERED IF");
+//                    String command = scan.nextLine();
+//                    client.messageReceived(command, client);
+//                }
+               if(action.hasNext()){
+                    System.out.println("ENTERED ELSE");
                     String toDo = action.nextLine();
                     client.send(toDo);
+                    action.close();
                 }
-//                if(toDo.length() > 0){
-//                    System.out.println("Made into the scanner for System.in");
-//                    client.send(toDo);
-//                }
             }
-
         } catch (IOException e) {
             System.out.println(e.toString());
         }
-        //TODO Finish starting a client
-
     } // end main method
 
 } // end BattleDriver class

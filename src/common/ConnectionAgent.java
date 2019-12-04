@@ -33,10 +33,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         try {
             this.socket = socket;
             this.out = new PrintStream(socket.getOutputStream());
-            //this.out = new PrintStream((System.out));
             this.in = new Scanner(socket.getInputStream());
             this.thread =  Thread.currentThread();
-            //this.thread.start();
         } catch(IOException ioe){
 
         }
@@ -85,9 +83,10 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         try {
             this.out =  new PrintStream(socket.getOutputStream());
             InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
-            BufferedReader buffReader = new BufferedReader(inputStream);
+            this.in = new Scanner(inputStream);
             while(isConnected()) {
-                String message = buffReader.readLine();
+
+                String message = in.next();
                 notifyReceipt(message);
                 out.flush();
             }
