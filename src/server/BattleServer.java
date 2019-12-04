@@ -24,20 +24,34 @@ import java.util.HashMap;
  */
 public class BattleServer implements MessageListener {
 
+    /** */
     private ServerSocket serverSocket;
 
+    /**  */
     private int current;
 
+    /** The BattleShip game */
     private Game game;
 
+    /** If the game has been Started */
     private boolean started;
+
+    /** A arraylist of connection agents that have joined the game */
     private ArrayList<ConnectionAgent> conAgentCollection;
+
+    /** A arrayList of Threads */
     private ArrayList<Thread> threadCollection;
 
+    /** Given the Username can map to its Connection Agent */
     private HashMap<String, ConnectionAgent> userToConnectionAgentMap;
 
+    /** Given the Connection Agent can map to its username. */
     private HashMap<ConnectionAgent, String> connectionAgentToUserMap;
 
+    /**
+     *
+     * @param port
+     */
     public BattleServer(int port) {
 
         try {
@@ -90,20 +104,26 @@ public class BattleServer implements MessageListener {
 
     } // end listen method
 
+    /**
+     *
+     * @param agent
+     */
     public void addML(ConnectionAgent agent){
         agent.addMessageListener(this);
         System.out.println("Made a new listener");
     }
 
+    /**
+     *
+     * @param message
+     */
     public void broadcast(String message) {
-
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
                 agent.sendMessage("*** " + message + " ***");
             }
         }
-
     } // end broadcast method
 
     /**
@@ -125,7 +145,6 @@ public class BattleServer implements MessageListener {
         }else{
             ca = this.userToConnectionAgentMap.get(source);
             parseCommands(message,ca);
-
         }
 
     } // end messageReceived method
@@ -144,6 +163,12 @@ public class BattleServer implements MessageListener {
 
     } // end sourceClosed method
 
+    /**
+     *
+     * @param command
+     * @param agent
+     * @return
+     */
     private String parseJoin(String command, ConnectionAgent agent){
         String user = "";
         String[] com = command.trim().split("\\s+");
@@ -163,8 +188,12 @@ public class BattleServer implements MessageListener {
         return user;
     }
 
+    /**
+     *
+     * @param command
+     * @param agent
+     */
     public void parseCommands(String command, ConnectionAgent agent){
-
         String[] com = command.trim().split("\\s+");
         String user;
         if(com.length > 0){
@@ -196,7 +225,6 @@ public class BattleServer implements MessageListener {
                     sourceClosed(agent);
                     game.leave(user);
                     break;
-
             }
         }
     }

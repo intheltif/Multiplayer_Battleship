@@ -54,7 +54,9 @@ public class BattleDriver {
                 String command = scan.nextLine();
                 if (command.length() > 0) {
                     client.messageReceived(command, client);
-                }else if(toDo.length() > 0){
+                }
+                if(toDo.length() > 0){
+                    System.out.println("Made into the scanner for System.in");
                     client.send(toDo);
                 }
             }

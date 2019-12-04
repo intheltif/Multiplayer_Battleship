@@ -88,10 +88,9 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             BufferedReader buffReader = new BufferedReader(inputStream);
             while(isConnected()) {
                 String message = buffReader.readLine();
-                while(message != null){
-                    notifyReceipt(message);
-                    out.flush();
-                }
+                notifyReceipt(message);
+                out.flush();
+                System.out.println("Thread: ");
             }
             this.close();
         } catch (IOException ioe) {
