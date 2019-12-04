@@ -66,14 +66,14 @@ public class BattleServer implements MessageListener {
                 if(!started) {
                     ConnectionAgent agent =
                             new ConnectionAgent(this.serverSocket.accept());
-                    Thread thread = new Thread(agent);
-                    threadCollection.add(thread);
-                    thread.start();
-                    conAgentCollection.add(agent);
                     if (agent.isConnected()) {
                         //TODO need to receive a command from the client
                         // connection agent that is the join command then
                         addML(agent);
+                        Thread thread = new Thread(agent);
+                        thread.start();
+                        threadCollection.add(thread);
+                        conAgentCollection.add(agent);
                     }
                     //TODO gets a command that is sent by the Client connection agent.
                     // which makes a connection agent on the sever side, parses the message play the
