@@ -32,6 +32,7 @@ public class BattleServer implements MessageListener {
 
     private boolean started;
     private ArrayList<ConnectionAgent> conAgentCollection;
+    private ArrayList<Thread> threadCollection;
 
     private HashMap<String, ConnectionAgent> userToConnectionAgentMap;
 
@@ -64,6 +65,9 @@ public class BattleServer implements MessageListener {
                 if(!started) {
                     ConnectionAgent agent =
                             new ConnectionAgent(this.serverSocket.accept());
+                    Thread thread = new Thread(agent);
+                    threadCollection.add(thread);
+                    thread.start();
                     conAgentCollection.add(agent);
                     if (agent.isConnected()) {
                         //TODO need to receive a command from the client

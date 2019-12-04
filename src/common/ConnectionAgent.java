@@ -35,8 +35,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             this.out = new PrintStream(socket.getOutputStream());
             //this.out = new PrintStream((System.out));
             this.in = new Scanner(socket.getInputStream());
-            this.thread = new Thread(this);
-            this.thread.start();
+            this.thread =  Thread.currentThread();
+            //this.thread.start();
         } catch(IOException ioe){
 
         }
