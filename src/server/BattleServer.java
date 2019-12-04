@@ -100,7 +100,7 @@ public class BattleServer implements MessageListener {
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
                 System.out.println("Iffy Lube");
-                agent.sendMessage(message);
+                agent.sendMessage("*** " + message + " ***");
             }
         }
         System.out.println("I stopped broadcasting...");
@@ -114,11 +114,10 @@ public class BattleServer implements MessageListener {
      * @param source  The source from which this message originated (if needed).
      */
     public void messageReceived(String message, MessageSource source) {
-        ConnectionAgent ca2;
         ConnectionAgent ca;
         if(!started) {
-            ca2 = this.conAgentCollection.get(this.conAgentCollection.size()-1);
-            parseJoin(message, ca2);
+            ca = this.conAgentCollection.get(this.conAgentCollection.size()-1);
+            parseJoin(message, ca);
         }else{
             ca = this.userToConnectionAgentMap.get(source);
 
@@ -141,7 +140,7 @@ public class BattleServer implements MessageListener {
 
     } // end sourceClosed method
 
-    public String parseJoin(String command, ConnectionAgent agent){
+    private String parseJoin(String command, ConnectionAgent agent){
         String user = "";
         String[] com = command.trim().split("\\s+");
         if(com.length == 2) {
