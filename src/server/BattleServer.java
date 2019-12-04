@@ -95,16 +95,13 @@ public class BattleServer implements MessageListener {
     }
 
     public void broadcast(String message) {
-        System.out.println("I started broadcasting...");
 
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
-                System.out.println("Iffy Lube");
                 agent.sendMessage("*** " + message + " ***");
             }
         }
-        System.out.println("I stopped broadcasting...");
 
     } // end broadcast method
 
@@ -154,7 +151,8 @@ public class BattleServer implements MessageListener {
                 case "/join":
                     this.connectionAgentToUserMap.put(agent, com[1]);
                     this.userToConnectionAgentMap.put(com[1], agent);
-                    System.out.println(this.connectionAgentToUserMap.get(agent) + " Joined the game");
+                    user = this.connectionAgentToUserMap.get(agent);
+                    System.out.println("SERVER: " + user + " joined the game");
                     this.game.join(com[1],5); //TODO Handle the grid size
                     broadcast("!!! " + user + " has joined");
                     user = com[1];
