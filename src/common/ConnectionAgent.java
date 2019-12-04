@@ -90,7 +90,6 @@ public class ConnectionAgent extends MessageSource implements Runnable {
                 String message = buffReader.readLine();
                 notifyReceipt(message);
                 out.flush();
-                System.out.println("Thread: ");
             }
             this.close();
         } catch (IOException ioe) {

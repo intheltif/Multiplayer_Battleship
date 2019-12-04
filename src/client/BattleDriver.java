@@ -49,16 +49,19 @@ public class BattleDriver {
                 //TODO using the scanner in connection agent, to read the messages that
                 // are received by the keyboard.
                 Scanner action = new Scanner(System.in);
-                String toDo = action.nextLine();
+                //String toDo = action.nextLine();
                 Scanner scan = agent.getIn();
                 String command = scan.nextLine();
                 if (command.length() > 0) {
                     client.messageReceived(command, client);
-                }
-                if(toDo.length() > 0){
-                    System.out.println("Made into the scanner for System.in");
+                }else {
+                    String toDo = action.nextLine();
                     client.send(toDo);
                 }
+//                if(toDo.length() > 0){
+//                    System.out.println("Made into the scanner for System.in");
+//                    client.send(toDo);
+//                }
             }
 
         } catch (IOException e) {
