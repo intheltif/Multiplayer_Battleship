@@ -45,6 +45,7 @@ public class BattleServer implements MessageListener {
             this.conAgentCollection = new ArrayList<>();
             this.connectionAgentToUserMap = new HashMap<>();
             this.userToConnectionAgentMap = new HashMap<>();
+            this.threadCollection = new ArrayList<>();
             this.game = null;
             this.current = -1;
             this.started = false;
