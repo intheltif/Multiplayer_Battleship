@@ -51,9 +51,9 @@ public class BattleClient extends MessageSource implements MessageListener  {
         this.hostname =  InetAddress.getByName(hostname);
         Socket socket = new Socket(this.getHostname(), this.port);
         this.agent = new ConnectionAgent(socket);
-        this.connect();
         addMessageListener(this);
         this.print = new PrintStreamMessageListener(agent.getOut());
+        this.connect();
     } // end constructor
 
     /**
@@ -104,9 +104,10 @@ public class BattleClient extends MessageSource implements MessageListener  {
         //TODO Finish method, ?where it prints the message of this curtain client
         // or is this with the PrintStreamMessageListener?
         //agent.getOut().print(message);
-        print.messageReceived(message,source);
-        agent.getOut().flush();
-        System.out.println("Message received in client: " + message);
+        System.out.println(message);
+        //print.messageReceived(message,source);
+        //agent.getOut().flush();
+       // System.out.println("Message received in client: " + message);
     } //end messageReceived
 
     /**
@@ -127,6 +128,7 @@ public class BattleClient extends MessageSource implements MessageListener  {
      */
     public void send(String message){
         agent.sendMessage(message);
+
     } //end send
 
 } // end BattleClient class

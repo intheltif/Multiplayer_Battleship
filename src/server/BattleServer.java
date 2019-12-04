@@ -69,10 +69,6 @@ public class BattleServer implements MessageListener {
                         //TODO need to receive a command from the client
                         // connection agent that is the join command then
                         addML(agent);
-//                        String command = buff.
-//                        String user = parseJoin(command, agent);
-                        //String user = " ";
-                        //broadcast("!!! " + user + "has joined");
                     }
                     //TODO gets a command that is sent by the Client connection agent.
                     // which makes a connection agent on the sever side, parses the message play the
@@ -91,6 +87,7 @@ public class BattleServer implements MessageListener {
 
     public void addML(ConnectionAgent agent){
         agent.addMessageListener(this);
+        System.out.println("Made a new listener");
     }
 
     public void broadcast(String message) {
@@ -115,11 +112,17 @@ public class BattleServer implements MessageListener {
      */
     public void messageReceived(String message, MessageSource source) {
         ConnectionAgent ca;
+        String user;
         if(!started) {
             ca = this.conAgentCollection.get(this.conAgentCollection.size()-1);
-            parseJoin(message, ca);
+            user = this.connectionAgentToUserMap.get(ca);
+            if(user == null) {
+                System.out.println(message);
+                parseJoin(message, ca);
+            }
         }else{
             ca = this.userToConnectionAgentMap.get(source);
+            parseCommands(message,ca);
 
         }
 
@@ -132,7 +135,6 @@ public class BattleServer implements MessageListener {
      * @param source The <code>MessageSource</code> that does not expect more messages.
      */
     public void sourceClosed(MessageSource source) {
-
         // Remove the subject from all collections/maps associated with it
         conAgentCollection.remove(source);
         userToConnectionAgentMap.remove(source);
@@ -149,7 +151,7 @@ public class BattleServer implements MessageListener {
                     this.connectionAgentToUserMap.put(agent, com[1]);
                     this.userToConnectionAgentMap.put(com[1], agent);
                     System.out.println(this.connectionAgentToUserMap.get(agent) + " Joined the game");
-                    this.game.join(com[1],5); //Handle the grid size
+                    this.game.join(com[1],5); //TODO Handle the grid size
                     broadcast("!!! " + user + " has joined");
                     user = com[1];
                     break;
@@ -161,6 +163,7 @@ public class BattleServer implements MessageListener {
     public void parseCommands(String command, ConnectionAgent agent){
 
         String[] com = command.trim().split("\\s+");
+        String user;
         if(com.length > 0){
             switch (com[0]){
                 case"/join":
@@ -170,22 +173,25 @@ public class BattleServer implements MessageListener {
                     if(this.conAgentCollection.size() >=2 && !started){
                         started = true;
                         broadcast("The game begins");
-                        String user = this.connectionAgentToUserMap.get(agent);
+                        user = this.connectionAgentToUserMap.get(agent);
                         System.out.println(user + " Started the game");
                     }
                     break;
                 case "/attack":
                     if(started){
-
+                        //only allows to attack if it is there turn.
                     }
                     break;
                 case"/show" :
                     if(started){
-
+                        user = this.connectionAgentToUserMap.get(agent);
+                        //a call to show so the correct board prints.
                     }
                     break;
                 case "/quit":
-
+                    user = this.connectionAgentToUserMap.get(agent);
+                    sourceClosed(agent);
+                    game.leave(user);
                     break;
 
             }

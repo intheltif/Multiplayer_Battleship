@@ -89,6 +89,10 @@ public class Game {
 
     } // end getNumPlayers method
 
+    public ArrayList<String> getPlayers(){
+        return this.players;
+    }
+
     /**
      * Checks to see if coordinates given by a player are a valid hit.
      *

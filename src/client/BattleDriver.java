@@ -50,11 +50,11 @@ public class BattleDriver {
                 // are received by the keyboard.
                 Scanner action = new Scanner(System.in);
                 String toDo = action.nextLine();
+                Scanner scan = agent.getIn();
+                String command = scan.nextLine();
                 if(toDo.length() > 0){
                     client.send(toDo);
                 }
-                Scanner scan = agent.getIn();
-                String command = scan.nextLine();
                 if (command.length() > 0) {
                     client.messageReceived(command, client);
                 }

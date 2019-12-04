@@ -83,18 +83,17 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     @Override
     public void run() {
         try {
+            this.out =  new PrintStream(socket.getOutputStream());
             InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
             BufferedReader buffReader = new BufferedReader(inputStream);
             while(isConnected()) {
                 String message = buffReader.readLine();
                 while(message != null){
-                    //System.out.println("Read in thread" + message);
                     notifyReceipt(message);
                     out.flush();
                 }
-                //sendMessage(message);
-
             }
+            this.close();
         } catch (IOException ioe) {
             System.err.println("IOException in the thread.");
             System.exit(1);
