@@ -52,13 +52,11 @@ public class BattleDriver {
                 String toDo = action.nextLine();
                 Scanner scan = agent.getIn();
                 String command = scan.nextLine();
-                if(toDo.length() > 0){
-                    client.send(toDo);
-                }
                 if (command.length() > 0) {
                     client.messageReceived(command, client);
+                }else if(toDo.length() > 0){
+                    client.send(toDo);
                 }
-
             }
 
         } catch (IOException e) {
