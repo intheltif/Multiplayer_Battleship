@@ -17,31 +17,31 @@ import java.util.HashMap;
  * @author Evert Ball and Carlee Yancey
  * @version 18 November 2019
  *
- * TODO Finish documentation for fields and methods.
- * TODO Update the class documentation as needed.
- * TODO Finish creating the methods.
  */
 public class BattleServer implements MessageListener {
 
-    /** */
+    /** The welcoming socket that clients connect through */
     private ServerSocket serverSocket;
 
-    /**  */
+    /** The index to the current player */
     private int current;
 
-    /** The BattleShip game */
+    /** The Battleship game */
     private Game game;
 
-    /** If the game has been Started */
+    /** If the game has been started */
     private boolean started;
 
-    /** A arraylist of connection agents that have joined the game */
+    /** An ArrayList of connection agents that have joined the game */
     private ArrayList<ConnectionAgent> conAgentCollection;
 
-    /** Given the Username can map to its Connection Agent */
+    /** An ArrayList of Threads */
+    private ArrayList<Thread> threadCollection;
+
+    /** Maps usernames to ConnectionAgents */
     private HashMap<String, ConnectionAgent> userToConnectionAgentMap;
 
-    /** Given the Connection Agent can map to its username. */
+    /** Maps ConnectionAgents to usernames */
     private HashMap<ConnectionAgent, String> connectionAgentToUserMap;
 
     /** The size of the Grid */
@@ -221,6 +221,20 @@ public class BattleServer implements MessageListener {
                     sourceClosed(agent);
                     game.leave(user);
                     break;
+                case "/help":
+                    StringBuilder builtStr = new StringBuilder();
+                    builtStr.append("List of commands: \n");
+                    builtStr.append("\t/show <username> - Shows the username " +
+                            "for the specified player.\n");
+                    builtStr.append("\t/attack <username> <column> <row> - " +
+                            "Attack another user's board at the specified " +
+                            "column and row.\n");
+                    builtStr.append("\t/play - Initiates a game of " +
+                            "Battleship once 2 or more players have joined.\n");
+                    builtStr.append("\t/quit - Quits from a game of " +
+                            "Battleship.\n");
+                    String str = new String(builtStr);
+                    agent.sendMessage(str);
             }
         }
     }
