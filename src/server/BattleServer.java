@@ -214,29 +214,11 @@ public class BattleServer implements MessageListener {
                     }
                     break;
                 case "/quit":
-                    user = this.connectionAgentToUserMap.get(agent);
-                    System.out.println("PARSE COMMANDS: " + command +
-                            " USER: " + user);
-                    broadcast("!!! " + user + " surrendered");
-                    sourceClosed(agent);
-                    game.leave(user);
+                    parseQuit(command, agent);
                     break;
                 case "/help":
-                    StringBuilder builtStr = new StringBuilder();
-                    builtStr.append("COMMAND                           DESCRIPTION\n");
-                    builtStr.append("-------                           -----------\n");
-                    builtStr.append("/show <username>                  - " +
-                            "Shows the username for the specified player.\n");
-                    builtStr.append("/attack <username> <column> <row> - " +
-                            "Attack another user's board at the specified " +
-                            "column and row.\n");
-                    builtStr.append("/play                             - " +
-                            "Initiates a game of Battleship once 2 or more " +
-                            "players have joined.\n");
-                    builtStr.append("/quit                             - " +
-                            "Quits from a game of Battleship.\n");
-                    String str = new String(builtStr);
-                    agent.sendMessage(str);
+                    parseHelp(agent);
+                    break;
             }
         }
     }
@@ -344,6 +326,45 @@ public class BattleServer implements MessageListener {
             agent.sendMessage(board);
         }
     }
+
+    /**
+     * Parses the command for quitting from a game of Battleship.
+     *
+     * @param command The command that was issued from the client.
+     * @param agent The <code>ConnectionAgent</code> that sent the command.
+     */
+    private void parseQuit(String command, ConnectionAgent agent) {
+        String user = this.connectionAgentToUserMap.get(agent);
+        System.out.println("PARSE COMMANDS: " + command +
+                " USER: " + user);
+        broadcast("!!! " + user + " surrendered");
+        sourceClosed(agent);
+        game.leave(user);
+    } // end parseQuit method
+
+    /**
+     * Parses the command for showing all of the available commands clients can
+     * send.
+     *
+     * @param agent The <code>ConnectionAgent</code> that sent the command.
+     */
+    private void parseHelp(ConnectionAgent agent) {
+        StringBuilder builtStr = new StringBuilder();
+        builtStr.append("COMMAND                           DESCRIPTION\n");
+        builtStr.append("-------                           -----------\n");
+        builtStr.append("/show <username>                  - " +
+                "Shows the username for the specified player.\n");
+        builtStr.append("/attack <username> <column> <row> - " +
+                "Attack another user's board at the specified " +
+                "column and row.\n");
+        builtStr.append("/play                             - " +
+                "Initiates a game of Battleship once 2 or more " +
+                "players have joined.\n");
+        builtStr.append("/quit                             - " +
+                "Quits from a game of Battleship.\n");
+        String str = new String(builtStr);
+        agent.sendMessage(str);
+    } // end parseHelp method
 
     /**
      * This calls the hit method from game to try to attack the grid.
