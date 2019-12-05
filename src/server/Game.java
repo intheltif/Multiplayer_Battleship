@@ -48,7 +48,6 @@ public class Game {
         this.playerMap.put(nickname, new Grid(size));
         this.players.add(nickname);
         placeShips(nickname);
-
     } // end join method
 
     public void leave(String nickname) {
@@ -282,16 +281,18 @@ public class Game {
      * @param nickname The board being shown
      * @param current Who turn it currently is.
      */
-    public void show(String nickname, String current){
+    public String show(String nickname, String current){
+        String board = "";
         if (this.players.contains(nickname)) {
             if (current.equals(nickname)) {
                 Grid show = getGrid(nickname);
-                show.printGrid();
+                board = show.printGrid();
             } else {
                 Grid show = getGrid(nickname);
-                show.printPartialGrid();
+                board = show.printPartialGrid();
             }
         }
+        return board;
     }
 
     /**

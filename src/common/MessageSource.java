@@ -75,20 +75,13 @@ public abstract class MessageSource {
      * @param message The message this subject received.
      */
     protected void notifyReceipt(String message) {
-        //System.out.println("OutSide of forLoop: " + message);
 
-        for (MessageListener listener: this.messageListeners) {
-            //System.out.println("THIS IS LISTENER: " + listener);
-
-        }
         for (MessageListener listener : new ArrayList<MessageListener>(messageListeners)) {
             /* 
              * We wrap this in a try/catch block so that just in case one of our observers screws
              * up, we don't want to stop notifying other observers.
              */
             try {
-                //System.out.println("THIS IS LISTENER: " + listener);
-                //System.out.println("In NotifyReceipt: " +  message);
                 listener.messageReceived(message, this);
             } catch (RuntimeException ex) {
                 /* 

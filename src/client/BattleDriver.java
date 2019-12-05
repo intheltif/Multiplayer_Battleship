@@ -46,10 +46,8 @@ public class BattleDriver {
             while(agent.isConnected()) {
                 Scanner action = new Scanner(System.in);
                 if(action.hasNextLine()){
-                    System.out.println("ENTERED ELSE");
                     String toDo = action.nextLine();
                     client.send(toDo);
-                    //action.close();
                 }
             }
         } catch (IOException e) {

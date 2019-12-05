@@ -48,12 +48,14 @@ public class BattleServer implements MessageListener {
     /** Given the Connection Agent can map to its username. */
     private HashMap<ConnectionAgent, String> connectionAgentToUserMap;
 
+    /** The size of the Grid */
+    private int size;
+
     /**
      *
      * @param port
      */
     public BattleServer(int port) {
-
         try {
             this.serverSocket = new ServerSocket(port);
             this.conAgentCollection = new ArrayList<>();
@@ -61,47 +63,40 @@ public class BattleServer implements MessageListener {
             this.userToConnectionAgentMap = new HashMap<>();
             this.threadCollection = new ArrayList<>();
             this.game = null;
-            this.current = -1;
+            this.current = 0;
             this.started = false;
         } catch (IOException ioe) {
             System.err.println("IO Error: " + ioe.getMessage());
             //TODO Maybe handle a bit better
         }
-
     } // end BattleServer constructor
+
+    public void setSize(int size){
+        this.size = size;
+    }
 
     /**
      * Listens for connections from client devices that want to play a game.
      */
     public void listen() {
+        this.game = new Game(this.size);
         while (!this.serverSocket.isClosed()) {
             try {
-                this.game = new Game(5);
                 if(!started) {
                     ConnectionAgent agent =
                             new ConnectionAgent(this.serverSocket.accept());
                     if (agent.isConnected()) {
-                        //TODO need to receive a command from the client
-                        // connection agent that is the join command then
                         addML(agent);
                         Thread thread = new Thread(agent);
                         thread.start();
                         threadCollection.add(thread);
                         conAgentCollection.add(agent);
                     }
-                    //TODO gets a command that is sent by the Client connection agent.
-                    // which makes a connection agent on the sever side, parses the message play the
-                    // that it receives if it is the play command and the the connection agent array
-                    // list is greater than or equal to 2 it will allow the game to start.f
                 }
-
-                // TODO What to do from here?
-
             } catch (IOException ioe) {
                 System.out.println("IO Exception Occurred.");
             } // end try-catch
         } // end while loop
-
     } // end listen method
 
     /**
@@ -120,7 +115,6 @@ public class BattleServer implements MessageListener {
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
-                System.out.println("USER IN BROADAST: " + this.connectionAgentToUserMap.get(agent));
                 agent.sendMessage("*** " + message + " ***");
             }
         }
@@ -137,13 +131,13 @@ public class BattleServer implements MessageListener {
         String user;
         if(!started) {
             ca = this.conAgentCollection.get(this.conAgentCollection.size()-1);
-            System.out.println("AGENT: " + ca.toString());
+            //System.out.println("AGENT: " + ca.toString());
             user = this.connectionAgentToUserMap.get(ca);
             if(user == null) {
                 System.out.println(message);
                 parseCommands(message,ca);
             } else {
-                System.out.println("SERVER: ENTERED PARSE");
+                //System.out.println("SERVER: ENTERED PARSE");
                 System.out.println(message);
                 user = this.connectionAgentToUserMap.get(source);
                 ca = this.userToConnectionAgentMap.get(user);
@@ -190,10 +184,8 @@ public class BattleServer implements MessageListener {
                     this.userToConnectionAgentMap.put(com[1], agent);
                     user = this.connectionAgentToUserMap.get(agent);
                     System.out.println("SERVER: " + user + " joined the game");
-                    this.game.join(com[1],5); //TODO Handle the grid size
-
+                    this.game.join(com[1],size);
                     broadcast("!!! " + user + " has joined");
-                    System.out.println("Made it past broadcast");
                     break;
             }
         }
@@ -214,12 +206,17 @@ public class BattleServer implements MessageListener {
                     break;
                 case "/play":
                     if(this.conAgentCollection.size() >=2 && !started){
+                        user = this.connectionAgentToUserMap.get(agent);
+                        String player = game.getPlayers().get(0);
                         started = true;
                         broadcast("The game begins");
+                        broadcast(player + " it is you turn");
                         user = this.connectionAgentToUserMap.get(agent);
                         System.out.println(user + " Started the game");
-                    }else{
+                    }else if (!started){
                         agent.sendMessage("Not enough players to play the game");
+                    }else{
+                        agent.sendMessage("Game has been Started");
                     }
                     break;
                 case "/attack":
@@ -234,23 +231,97 @@ public class BattleServer implements MessageListener {
                     break;
                 case"/show" :
                     if(started){
-                        user = this.connectionAgentToUserMap.get(agent);
-                        //a call to show so the correct board prints.
+                        System.out.println("PARSE COMMANDS: " + command);
+                        parseShow(command,agent);
                     }else{
                         agent.sendMessage("Play not in progress");
                     }
                     break;
                 case "/quit":
+                    //TODO make the quit command work right
                     user = this.connectionAgentToUserMap.get(agent);
                     agent.sendMessage("!!! " + user + "surrendered");
                     sourceClosed(agent);
-                    game.leave(user);
+                   // game.leave(user);
                     break;
             }
         }
     }
 
     public void parseAttack(String command, ConnectionAgent agent){
+        String[] com = command.trim().split("\\s+");
+        String info = com[0];
+        String turn = this.game.turn(this.current);
+        int col = -1;
+        int row = -1;
+        int attAgr = 4;
+        String curr = this.connectionAgentToUserMap.get(agent);
+        boolean attacked = false;
+        if(!curr.equals(turn)){
+            broadcast("Move Failed, player " +
+                    "turn: " + turn);
+        }else {
+            try {
+                col = Integer.parseInt(com[2]);
+                row = Integer.parseInt(com[3]);
+            } catch (NumberFormatException nfe) {
+                System.out.println("Attack coordinates must be " +
+                        "integers.");
+            } catch (ArrayIndexOutOfBoundsException aioobe) {
+                System.out.println("Usage: /attack <player> " +
+                        "<col> <row>");
+            }
+            if (col > (this.size - 1) || row > (this.size - 1) ||
+                    col < 0 || row < 0) {
+                System.out.println("Usage: /attack <player> " +
+                        "<col> <row>");
+            }
+            if (com.length == attAgr) {
+                if (!turn.equals(com[1])) {
+                    attacked = attack(game, com);
+                    if (!attacked) {
+                        broadcast("Move Failed, player " +
+                                "turn: " + turn);
+                    } else {
+                        System.out.println("Shots Fired at " +
+                                com[1] + " by " + curr);
+                        this.current++;
+                    }
+                }
+            } else {
+                System.out.println("Invalid command: " + command);
+            }
+            turn = game.turn(this.current);
+            broadcast(turn + " it is you turn");
+        }
+    }
 
+    public void parseShow(String command, ConnectionAgent agent){
+        System.out.println("IN PARSE SHOW: " + command);
+        int showArgs = 2;
+        String[] com = command.trim().split("\\s+");
+        String board;
+        String curr = this.connectionAgentToUserMap.get(agent);
+        if (com.length == showArgs) {
+            board = game.show(com[1], curr);
+            agent.sendMessage(board);
+        }else{
+            System.out.println("/show <username>");
+        }
+
+    }
+
+    /**
+     * This calls the hit method from game to try to attack the grid.
+     *
+     * @param game The current game.
+     * @param command Information that way entered.
+     * @return If the attack was complete.
+     */
+    private boolean attack(Game game, String[] command){
+        int row = Integer.parseInt(command[3]);
+        int column = Integer.parseInt(command[2]);
+        String nickname  = command[1];
+        return game.hit(nickname, row, column);
     }
 } // end BattleServer class

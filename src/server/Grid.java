@@ -59,61 +59,81 @@ public class Grid {
     /**
      * This prints the current state of the grid.
      */
-    public void printGrid(){
+    public String printGrid(){
+        String board = "";
+        System.out.println("IN print Grid");
         for(int i = 0; i < this.board.length + 1; i++){
             if(i != 0) {
+                board = board.concat((i - 1) + " | ");
                 System.out.print((i - 1) + " | ");
             }
             for(int j = 0; j < this.board.length; j++){
                 if(i == 0){
                     if(j == 0){
+                        board = board.concat("    " + j + "   ");
                         System.out.print("    " + j + "   ");
                     }else {
+                        board = board.concat(j + "   ");
                         System.out.print(j + "   ");
                     }
                 }else {
+                    board = board.concat(this.board[i-1][j] + " | ");
                     System.out.print(this.board[i-1][j] + " | ");
                 }
             }
+            board = board.concat("\n  +---");
             System.out.print("\n  +---");
             for (int k = 1; k < this.board.length ; k++) {
+                board = board.concat("+---");
                 System.out.print("+---");
 
             }
+            board = board.concat("+\n");
             System.out.println("+");
         }
+        return board;
     }
 
     /**
      * Prints the grid with only hits and misses.
      */
-    public void printPartialGrid() {
+    public String printPartialGrid() {
+        String board = "";
         for(int i = 0; i < this.board.length + 1; i++){
             if(i != 0) {
+                board = board.concat((i - 1) + " | ");
                 System.out.print((i - 1) + " | ");
             }
             for(int j = 0; j < this.board.length; j++){
                 if(i == 0){
                     if(j == 0){
+                        board = board.concat("    " + j + "   ");
                         System.out.print("    " + j + "   ");
                     }else {
+                        board = board.concat(j + "   ");
                         System.out.print(j + "   ");
                     }
                 }else {
                     if(this.board[i-1][j].equals("@") ||
                             this.board[i-1][j].equals("X")) {
+                        board = board.concat(this.board[i - 1][j] + " | ");
                         System.out.print(this.board[i - 1][j] + " | ");
                     }else{
+                        board = board.concat(" " + " | ");
                         System.out.print(" " + " | ");
                     }
                 }
             }
+            board = board.concat("\n  +---");
             System.out.print("\n  +---");
             for (int k = 1; k < this.board.length ; k++) {
+                board = board.concat("+---");
                 System.out.print("+---");
             }
+            board = board.concat("+\n");
             System.out.println("+");
         }
+        return board;
     }
 
     /**

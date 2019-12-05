@@ -38,7 +38,7 @@ public class BattleShipDriver {
      */
     public static void main(String[] args) {
         int port = -1;
-        int size;
+        int size = -1;
         // Validate correct number of arguments.
         if(args.length != NUM_ARGS) {
             System.out.println(USAGE_MSG);
@@ -59,6 +59,7 @@ public class BattleShipDriver {
             System.exit(FAILURE);
         }
         BattleServer bs = new BattleServer(port);
+        bs.setSize(size);
         bs.listen();
         // If we made it here, then we can successfully exit
         System.exit(SUCCESS);
