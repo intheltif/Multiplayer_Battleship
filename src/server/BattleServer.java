@@ -35,9 +35,6 @@ public class BattleServer implements MessageListener {
     /** An ArrayList of connection agents that have joined the game */
     private ArrayList<ConnectionAgent> conAgentCollection;
 
-    /** An ArrayList of Threads */
-    private ArrayList<Thread> threadCollection;
-
     /** Maps usernames to ConnectionAgents */
     private HashMap<String, ConnectionAgent> userToConnectionAgentMap;
 
@@ -100,8 +97,9 @@ public class BattleServer implements MessageListener {
     } // end listen method
 
     /**
+     * Sends a message to all currently connected <code>Connection agent</code>.
      *
-     * @param message
+     * @param message The message being sent.
      */
     public void broadcast(String message) {
         // Send message to all CAs currently connected.
@@ -164,7 +162,7 @@ public class BattleServer implements MessageListener {
      * @param agent The connection agent.
      */
     private void parseJoin(String command, ConnectionAgent agent){
-        String user = "";
+        String user;
         String[] com = command.trim().split("\\s+");
         if(com.length == 2) {
             this.connectionAgentToUserMap.put(agent, com[1]);
@@ -182,7 +180,7 @@ public class BattleServer implements MessageListener {
      * @param command The command.
      * @param agent The connection agent.
      */
-    public void parseCommands(String command, ConnectionAgent agent){
+    private void parseCommands(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
         String user;
         if(com.length > 0){
@@ -195,9 +193,6 @@ public class BattleServer implements MessageListener {
                     break;
                 case "/attack":
                     if(started){
-                        user = this.connectionAgentToUserMap.get(agent);
-                        System.out.println("PARSE COMMANDS: " + command +
-                                " USER: " + user);
                         parseAttack(command,agent);
                     }else{
                         agent.sendMessage("Play not in progress");
@@ -205,9 +200,6 @@ public class BattleServer implements MessageListener {
                     break;
                 case"/show" :
                     if(started){
-                        user = this.connectionAgentToUserMap.get(agent);
-                        System.out.println("PARSE COMMANDS: " + command+
-                                " USER: " + user);
                         parseShow(command,agent);
                     }else{
                         agent.sendMessage("Play not in progress");
@@ -239,7 +231,12 @@ public class BattleServer implements MessageListener {
         }
     }
 
-    public void parsePlay(ConnectionAgent agent){
+    /**
+     * This parses the command for a play command.
+     *
+     * @param agent The current connection agent.
+     */
+    private void parsePlay(ConnectionAgent agent){
         String user;
         if(this.conAgentCollection.size() >=2 && !started){
             user = this.connectionAgentToUserMap.get(agent);
@@ -263,7 +260,7 @@ public class BattleServer implements MessageListener {
      * @param command The given command.
      * @param agent The current connection agent.
      */
-    public void parseAttack(String command, ConnectionAgent agent){
+    private void parseAttack(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
         String turn = this.game.turn(this.current);
         int col = -1;
@@ -332,11 +329,13 @@ public class BattleServer implements MessageListener {
      * @param command The given command.
      * @param agent The current connection agent.
      */
-    public void parseShow(String command, ConnectionAgent agent){
+    private void parseShow(String command, ConnectionAgent agent){
         int showArgs = 2;
         String[] com = command.trim().split("\\s+");
         String board;
         String curr = this.connectionAgentToUserMap.get(agent);
+        System.out.println("PARSE COMMANDS: " + command +
+                " USER: " + curr);
         if (com.length == showArgs) {
             board = game.show(com[1], curr);
             agent.sendMessage(board);

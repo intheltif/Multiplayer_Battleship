@@ -27,7 +27,6 @@ public class PrintStreamMessageListener implements MessageListener {
      */
     public PrintStreamMessageListener(PrintStream out) {
         this.out = out;
-
     } // end constructor
 
     /**
@@ -37,23 +36,17 @@ public class PrintStreamMessageListener implements MessageListener {
      * @param source  The source from which this message originated (if needed).
      */
     public void messageReceived(String message, MessageSource source) {
-        //TODO finish writing
-       // System.out.println("Inside msgRcvd PSML");
         System.out.println(message);
-        //System.out.println("Leaving msgRcvd PSML");
-        //this.out.println(message);
-        //this.out.flush();
-
     } // end messageReceived method
 
     /**
-     * Used to notify observers that the subject will not receive new messages; observers can
-     * deregister themselves.
+     * Used to notify observers that the subject will not receive new messages;
+     * observers can deregister themselves.
      *
-     * @param source The <code>MessageSource</code> that does not expect more messages.
+     * @param source The <code>MessageSource</code> that does not expect more
+     *               messages.
      */
     public void sourceClosed(MessageSource source) {
-        //TODO Finish method
         source.removeMessageListener(this);
     } // end sourceClosed method
 
