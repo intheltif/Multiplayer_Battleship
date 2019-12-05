@@ -136,7 +136,6 @@ public class BattleServer implements MessageListener {
             ca = this.userToConnectionAgentMap.get(user);
             parseCommands(message, ca);
         }
-
     } // end messageReceived method
 
     /**
@@ -153,7 +152,6 @@ public class BattleServer implements MessageListener {
         conAgentCollection.remove(ca);
         userToConnectionAgentMap.remove(user);
         connectionAgentToUserMap.remove(ca);
-
     } // end sourceClosed method
 
     /**
@@ -184,7 +182,6 @@ public class BattleServer implements MessageListener {
      */
     private void parseCommands(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
-        String user;
         if(com.length > 0){
             switch (com[0]){
                 case"/join":
