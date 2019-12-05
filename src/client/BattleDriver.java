@@ -1,8 +1,6 @@
 package client;
 
 import common.ConnectionAgent;
-import org.omg.PortableInterceptor.SUCCESSFUL;
-
 import java.io.IOException;
 import java.util.Scanner;
 
