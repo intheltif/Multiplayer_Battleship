@@ -4,7 +4,6 @@ import common.*;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,9 +38,6 @@ public class BattleServer implements MessageListener {
     /** A arraylist of connection agents that have joined the game */
     private ArrayList<ConnectionAgent> conAgentCollection;
 
-    /** A arrayList of Threads */
-    private ArrayList<Thread> threadCollection;
-
     /** Given the Username can map to its Connection Agent */
     private HashMap<String, ConnectionAgent> userToConnectionAgentMap;
 
@@ -52,8 +48,10 @@ public class BattleServer implements MessageListener {
     private int size;
 
     /**
+     * This is the constructor for the BattleServer, it ask for a port
+     * number for its Server Socket.
      *
-     * @param port
+     * @param port The given port number.
      */
     public BattleServer(int port) {
         try {
@@ -61,7 +59,6 @@ public class BattleServer implements MessageListener {
             this.conAgentCollection = new ArrayList<>();
             this.connectionAgentToUserMap = new HashMap<>();
             this.userToConnectionAgentMap = new HashMap<>();
-            this.threadCollection = new ArrayList<>();
             this.game = null;
             this.current = 0;
             this.started = false;
@@ -71,6 +68,10 @@ public class BattleServer implements MessageListener {
         }
     } // end BattleServer constructor
 
+    /**
+     * This method sets the size to be given to game.
+     * @param size The size given.
+     */
     public void setSize(int size){
         this.size = size;
     }
@@ -86,10 +87,9 @@ public class BattleServer implements MessageListener {
                     ConnectionAgent agent =
                             new ConnectionAgent(this.serverSocket.accept());
                     if (agent.isConnected()) {
-                        addML(agent);
+                        agent.addMessageListener(this);
                         Thread thread = new Thread(agent);
                         thread.start();
-                        threadCollection.add(thread);
                         conAgentCollection.add(agent);
                     }
                 }
@@ -98,14 +98,6 @@ public class BattleServer implements MessageListener {
             } // end try-catch
         } // end while loop
     } // end listen method
-
-    /**
-     *
-     * @param agent
-     */
-    public void addML(ConnectionAgent agent){
-        agent.addMessageListener(this);
-    }
 
     /**
      *
@@ -131,21 +123,15 @@ public class BattleServer implements MessageListener {
         String user;
         if(!started) {
             ca = this.conAgentCollection.get(this.conAgentCollection.size()-1);
-            //System.out.println("AGENT: " + ca.toString());
             user = this.connectionAgentToUserMap.get(ca);
             if(user == null) {
-                System.out.println(message);
                 parseCommands(message,ca);
             } else {
-                //System.out.println("SERVER: ENTERED PARSE");
-                System.out.println(message);
                 user = this.connectionAgentToUserMap.get(source);
                 ca = this.userToConnectionAgentMap.get(user);
                 parseCommands(message, ca);
             }
         } else {
-            System.out.println("SERVER: Started");
-            System.out.println(message);
             user = this.connectionAgentToUserMap.get(source);
             ca = this.userToConnectionAgentMap.get(user);
             parseCommands(message, ca);
@@ -154,10 +140,11 @@ public class BattleServer implements MessageListener {
     } // end messageReceived method
 
     /**
-     * Used to notify observers that the subject will not receive new messages; observers can
-     * deregister themselves.
+     * Used to notify observers that the subject will not receive new messages;
+     * observers can deregister themselves.
      *
-     * @param source The <code>MessageSource</code> that does not expect more messages.
+     * @param source The <code>MessageSource</code> that does not expect more
+     *               messages.
      */
     public void sourceClosed(MessageSource source) {
         // Remove the subject from all collections/maps associated with it
@@ -180,23 +167,20 @@ public class BattleServer implements MessageListener {
         String user = "";
         String[] com = command.trim().split("\\s+");
         if(com.length == 2) {
-            switch (com[0]) {
-                case "/join":
-                    this.connectionAgentToUserMap.put(agent, com[1]);
-                    this.userToConnectionAgentMap.put(com[1], agent);
-                    user = this.connectionAgentToUserMap.get(agent);
-                    System.out.println("SERVER: " + user + " joined the game");
-                    this.game.join(com[1],size);
-                    broadcast("!!! " + user + " has joined");
-                    break;
-            }
+            this.connectionAgentToUserMap.put(agent, com[1]);
+            this.userToConnectionAgentMap.put(com[1], agent);
+            user = this.connectionAgentToUserMap.get(agent);
+            this.game.join(com[1],size);
+            System.out.println("SERVER: " + user + " JOINED THE GAME");
+            broadcast("!!! " + user + " has joined");
         }
     }
 
     /**
+     * This method parses a command from a curtain Connection Agent.
      *
-     * @param command
-     * @param agent
+     * @param command The command.
+     * @param agent The connection agent.
      */
     public void parseCommands(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
@@ -207,33 +191,23 @@ public class BattleServer implements MessageListener {
                     parseJoin(command,agent);
                     break;
                 case "/play":
-                    if(this.conAgentCollection.size() >=2 && !started){
-                        user = this.connectionAgentToUserMap.get(agent);
-                        String player = game.getPlayers().get(0);
-                        started = true;
-                        broadcast("The game begins");
-                        broadcast(player + " it is you turn");
-                        user = this.connectionAgentToUserMap.get(agent);
-                        System.out.println(user + " Started the game");
-                    }else if (!started){
-                        agent.sendMessage("Not enough players to play the game");
-                    }else{
-                        agent.sendMessage("Game has been Started");
-                    }
+                    parsePlay(agent);
                     break;
                 case "/attack":
                     if(started){
-                        //only allows to attack if it is there turn.
                         user = this.connectionAgentToUserMap.get(agent);
+                        System.out.println("PARSE COMMANDS: " + command +
+                                " USER: " + user);
                         parseAttack(command,agent);
-                        System.out.println(user + " Is attacking");
                     }else{
                         agent.sendMessage("Play not in progress");
                     }
                     break;
                 case"/show" :
                     if(started){
-                        System.out.println("PARSE COMMANDS: " + command);
+                        user = this.connectionAgentToUserMap.get(agent);
+                        System.out.println("PARSE COMMANDS: " + command+
+                                " USER: " + user);
                         parseShow(command,agent);
                     }else{
                         agent.sendMessage("Play not in progress");
@@ -241,11 +215,31 @@ public class BattleServer implements MessageListener {
                     break;
                 case "/quit":
                     user = this.connectionAgentToUserMap.get(agent);
+                    System.out.println("PARSE COMMANDS: " + command +
+                            " USER: " + user);
                     broadcast("!!! " + user + " surrendered");
                     sourceClosed(agent);
                     game.leave(user);
                     break;
             }
+        }
+    }
+
+    public void parsePlay(ConnectionAgent agent){
+        String user;
+        if(this.conAgentCollection.size() >=2 && !started){
+            user = this.connectionAgentToUserMap.get(agent);
+            String player = game.getPlayers().get(0);
+            started = true;
+            broadcast("The game begins");
+            broadcast(player + " it is you turn");
+            System.out.println("PARSE COMMANDS: " + user +
+                    " STARTED THE GAME");
+        }else if (!started){
+            agent.sendMessage("Not enough players to play the " +
+                    "game");
+        }else{
+            agent.sendMessage("Game has been Started");
         }
     }
 
@@ -257,17 +251,16 @@ public class BattleServer implements MessageListener {
      */
     public void parseAttack(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
-        String info = com[0];
         String turn = this.game.turn(this.current);
         int col = -1;
         int row = -1;
         int attAgr = 4;
         String curr = this.connectionAgentToUserMap.get(agent);
-        boolean attacked = false;
-
+        boolean attacked;
         if(!curr.equals(turn)){
             broadcast("Move Failed, player " +
                     "turn: " + turn);
+            System.out.println("MOVED FAILED IN USER: " + curr);
         }else {
             try {
                 col = Integer.parseInt(com[2]);
@@ -289,6 +282,7 @@ public class BattleServer implements MessageListener {
                     if(this.game.getPlayers().contains(com[1])) {
                         attacked = attack(game, com);
                         if (!attacked) {
+                            System.out.println("MOVED FAILED IN USER: " + curr);
                             agent.sendMessage("Move Failed, player " +
                                     "turn: " + turn);
                         } else {
@@ -297,6 +291,8 @@ public class BattleServer implements MessageListener {
                             this.current++;
                             String over = game.isGameOver();
                             if (!over.equals("")) {
+                                System.out.println("GAME OVER: " + over +
+                                        " WINS!");
                                 broadcast("GAME OVER: " + over + " WINS!");
                                 started = false;
                             }
@@ -310,6 +306,7 @@ public class BattleServer implements MessageListener {
             }
             if(started) {
                 turn = game.turn(this.current);
+                System.out.println(turn + " it is you turn");
                 broadcast(turn + " it is you turn");
             }
         }
@@ -322,7 +319,6 @@ public class BattleServer implements MessageListener {
      * @param agent The current connection agent.
      */
     public void parseShow(String command, ConnectionAgent agent){
-        System.out.println("IN PARSE SHOW: " + command);
         int showArgs = 2;
         String[] com = command.trim().split("\\s+");
         String board;
@@ -330,8 +326,6 @@ public class BattleServer implements MessageListener {
         if (com.length == showArgs) {
             board = game.show(com[1], curr);
             agent.sendMessage(board);
-        }else{
-            System.out.println("/show <username>");
         }
     }
 
