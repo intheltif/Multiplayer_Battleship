@@ -136,16 +136,24 @@ public class BattleServer implements MessageListener {
         String user;
         if(!started) {
             ca = this.conAgentCollection.get(this.conAgentCollection.size()-1);
+            System.out.println("AGENT: " + ca.toString());
             user = this.connectionAgentToUserMap.get(ca);
             if(user == null) {
                 System.out.println(message);
                 parseCommands(message,ca);
+            } else {
+                System.out.println("SERVER: ENTERED PARSE");
+                System.out.println(message);
+                user = this.connectionAgentToUserMap.get(source);
+                ca = this.userToConnectionAgentMap.get(user);
+                parseCommands(message, ca);
             }
-        }else{
-            System.out.println("SERVER: ENTERED PARSE");
+        } else {
+            System.out.println("SERVER: Started");
             System.out.println(message);
-            ca = this.userToConnectionAgentMap.get(source);
-            parseCommands(message,ca);
+            user = this.connectionAgentToUserMap.get(source);
+            ca = this.userToConnectionAgentMap.get(user);
+            parseCommands(message, ca);
         }
 
     } // end messageReceived method

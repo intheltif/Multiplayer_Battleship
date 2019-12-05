@@ -81,12 +81,12 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     @Override
     public void run() {
         try {
-            this.out =  new PrintStream(socket.getOutputStream());
+            //this.out =  new PrintStream(socket.getOutputStream());
             InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
             this.in = new Scanner(inputStream);
             while(isConnected()) {
-
-                String message = in.next();
+                String message = in.nextLine();
+                //in.reset();
                 notifyReceipt(message);
                 out.flush();
             }

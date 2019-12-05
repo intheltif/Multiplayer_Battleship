@@ -38,7 +38,9 @@ public class PrintStreamMessageListener implements MessageListener {
      */
     public void messageReceived(String message, MessageSource source) {
         //TODO finish writing
+        System.out.println("Inside msgRcvd PSML");
         System.out.println(message);
+        System.out.println("Leaving msgRcvd PSML");
         //this.out.println(message);
         //this.out.flush();
 
