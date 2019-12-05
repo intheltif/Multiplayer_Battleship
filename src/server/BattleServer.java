@@ -243,16 +243,18 @@ public class BattleServer implements MessageListener {
                     break;
                 case "/help":
                     StringBuilder builtStr = new StringBuilder();
-                    builtStr.append("List of commands: \n");
-                    builtStr.append("\t/show <username> - Shows the username " +
-                            "for the specified player.\n");
-                    builtStr.append("\t/attack <username> <column> <row> - " +
+                    builtStr.append("COMMAND                           DESCRIPTION\n");
+                    builtStr.append("-------                           -----------\n");
+                    builtStr.append("/show <username>                  - " +
+                            "Shows the username for the specified player.\n");
+                    builtStr.append("/attack <username> <column> <row> - " +
                             "Attack another user's board at the specified " +
                             "column and row.\n");
-                    builtStr.append("\t/play - Initiates a game of " +
-                            "Battleship once 2 or more players have joined.\n");
-                    builtStr.append("\t/quit - Quits from a game of " +
-                            "Battleship.\n");
+                    builtStr.append("/play                             - " +
+                            "Initiates a game of Battleship once 2 or more " +
+                            "players have joined.\n");
+                    builtStr.append("/quit                             - " +
+                            "Quits from a game of Battleship.\n");
                     String str = new String(builtStr);
                     agent.sendMessage(str);
             }
