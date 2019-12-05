@@ -185,7 +185,12 @@ public class Game {
                 }
             }
         }
+        /* If the there are only two players and one quits over will still be
+        true thus the need for the else if. */
         if(over && this.getNumPlayers() == 1) {
+            winner = this.players.get(0);
+            System.out.println("GAME OVER: "+ winner + " WINS!");
+        }else if(this.getNumPlayers() == 1){
             winner = this.players.get(0);
             System.out.println("GAME OVER: "+ winner + " WINS!");
         }

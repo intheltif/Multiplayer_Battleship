@@ -336,6 +336,13 @@ public class BattleServer implements MessageListener {
         broadcast("!!! " + user + " surrendered");
         sourceClosed(agent);
         game.leave(user);
+        String over = game.isGameOver();
+        if (!over.equals("")) {
+            System.out.println("GAME OVER: " + over +
+                    " WINS!");
+            broadcast("GAME OVER: " + over + " WINS!");
+            started = false;
+        }
     } // end parseQuit method
 
     /**
