@@ -126,73 +126,73 @@ public class BattleShipDriver {
      * @param scan The scanner that is being used.
      * @param game The current game in play.
      */
-    private static void play(Scanner scan, Game game, int size){
-        String current;
-        int turns = 0;
-        int attAgr = 4;
-        int showArgs = 2;
-        do{//Quit if a board has no ships left
-            current = game.turn(turns);
-            System.out.println(current + " it is you turn");
-            boolean attacked = false;
-            while(!(attacked)) { // this will quit if a player has attacked
-                String command = scan.next().concat(scan.nextLine());
-                String[] com = command.trim().split("\\s+");
-                String info = com[0];
-                int col = -1;
-                int row = -1;
-                switch (info) {
-                    case "/attack":
-                        try{
-                            col = Integer.parseInt(com[2]);
-                            row = Integer.parseInt(com[3]);
-                        } catch(NumberFormatException nfe) {
-                            System.out.println("Attack coordinates must be " + 
-                                "integers.");
-                            continue;
-                        } catch(ArrayIndexOutOfBoundsException aioobe) {
-                            System.out.println("Usage: /attack <player> " + 
-                                "<col> <row>");
-                            continue;
-                        }
-                        if(col > (size - 1) || row > (size - 1) ||
-                            col < 0 || row < 0) {
-                            System.out.println("Usage: /attack <player> " + 
-                                "<col> <row>");
-                            continue;
-                        }
-                        if(com.length == attAgr) {
-                            if(!current.equals(com[1])) {
-                                attacked = attack(game, com);
-                                if(!attacked){
-                                    System.out.println("Move Failed, player " +
-                                            "turn: " + current);
-                                }else{
-                                    System.out.println("Shots Fired at " +
-                                            com [1] + " by " + current);
-                                }
-                            }
-                        }else{
-                            System.out.println("Invalid command: " + command);
-                        }
-                        break;
-                    case "/show":
-                        if (com.length == showArgs) {
-                            game.show(com[1], current);
-
-                        }else{
-                            System.out.println("/show <username>");
-                        }
-                        break;
-                    case "/quit":
-                        //TODO Put the steps in for what happens if quited.
-                        System.exit(SUCCESS);
-                        break;
-                }
-            }
-            turns++;
-           } while(!game.isGameOver());
-    }
+//    private static void play(Scanner scan, Game game, int size){
+//        String current;
+//        int turns = 0;
+//        int attAgr = 4;
+//        int showArgs = 2;
+//        do{//Quit if a board has no ships left
+//            current = game.turn(turns);
+//            System.out.println(current + " it is you turn");
+//            boolean attacked = false;
+//            while(!(attacked)) { // this will quit if a player has attacked
+//                String command = scan.next().concat(scan.nextLine());
+//                String[] com = command.trim().split("\\s+");
+//                String info = com[0];
+//                int col = -1;
+//                int row = -1;
+//                switch (info) {
+//                    case "/attack":
+//                        try{
+//                            col = Integer.parseInt(com[2]);
+//                            row = Integer.parseInt(com[3]);
+//                        } catch(NumberFormatException nfe) {
+//                            System.out.println("Attack coordinates must be " +
+//                                "integers.");
+//                            continue;
+//                        } catch(ArrayIndexOutOfBoundsException aioobe) {
+//                            System.out.println("Usage: /attack <player> " +
+//                                "<col> <row>");
+//                            continue;
+//                        }
+//                        if(col > (size - 1) || row > (size - 1) ||
+//                            col < 0 || row < 0) {
+//                            System.out.println("Usage: /attack <player> " +
+//                                "<col> <row>");
+//                            continue;
+//                        }
+//                        if(com.length == attAgr) {
+//                            if(!current.equals(com[1])) {
+//                                attacked = attack(game, com);
+//                                if(!attacked){
+//                                    System.out.println("Move Failed, player " +
+//                                            "turn: " + current);
+//                                }else{
+//                                    System.out.println("Shots Fired at " +
+//                                            com [1] + " by " + current);
+//                                }
+//                            }
+//                        }else{
+//                            System.out.println("Invalid command: " + command);
+//                        }
+//                        break;
+//                    case "/show":
+//                        if (com.length == showArgs) {
+//                            game.show(com[1], current);
+//
+//                        }else{
+//                            System.out.println("/show <username>");
+//                        }
+//                        break;
+//                    case "/quit":
+//                        //TODO Put the steps in for what happens if quited.
+//                        System.exit(SUCCESS);
+//                        break;
+//                }
+//            }
+//            turns++;
+//           } while(!game.isGameOver());
+//    }
 
     /**
      * This calls the hit method from game to try to attack the grid.

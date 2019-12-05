@@ -248,6 +248,12 @@ public class BattleServer implements MessageListener {
         }
     }
 
+    /**
+     * This parses the command for a show command.
+     *
+     * @param command The given command.
+     * @param agent The current connection agent.
+     */
     public void parseAttack(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
         String info = com[0];
@@ -257,6 +263,7 @@ public class BattleServer implements MessageListener {
         int attAgr = 4;
         String curr = this.connectionAgentToUserMap.get(agent);
         boolean attacked = false;
+
         if(!curr.equals(turn)){
             broadcast("Move Failed, player " +
                     "turn: " + turn);
@@ -278,24 +285,41 @@ public class BattleServer implements MessageListener {
             }
             if (com.length == attAgr) {
                 if (!turn.equals(com[1])) {
-                    attacked = attack(game, com);
-                    if (!attacked) {
-                        broadcast("Move Failed, player " +
-                                "turn: " + turn);
-                    } else {
-                        System.out.println("Shots Fired at " +
-                                com[1] + " by " + curr);
-                        this.current++;
+                    if(this.game.getPlayers().contains(com[1])) {
+                        attacked = attack(game, com);
+                        if (!attacked) {
+                            agent.sendMessage("Move Failed, player " +
+                                    "turn: " + turn);
+                        } else {
+                            System.out.println("Shots Fired at " +
+                                    com[1] + " by " + curr);
+                            this.current++;
+                            String over = game.isGameOver();
+                            if (!over.equals("")) {
+                                broadcast("GAME OVER: " + over + " WINS!");
+                                started = false;
+                            }
+                        }
                     }
                 }
             } else {
-                System.out.println("Invalid command: " + command);
+                agent.sendMessage("Invalid command: " + command);
+                System.out.println("Invalid command: " + command + "from " +
+                        curr);
             }
-            turn = game.turn(this.current);
-            broadcast(turn + " it is you turn");
+            if(started) {
+                turn = game.turn(this.current);
+                broadcast(turn + " it is you turn");
+            }
         }
     }
 
+    /**
+     * This parses the command for a show command.
+     *
+     * @param command The given command.
+     * @param agent The current connection agent.
+     */
     public void parseShow(String command, ConnectionAgent agent){
         System.out.println("IN PARSE SHOW: " + command);
         int showArgs = 2;
@@ -308,7 +332,6 @@ public class BattleServer implements MessageListener {
         }else{
             System.out.println("/show <username>");
         }
-
     }
 
     /**
