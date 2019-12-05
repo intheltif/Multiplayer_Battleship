@@ -1,6 +1,7 @@
 package client;
 
 import common.ConnectionAgent;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -19,7 +20,8 @@ public class BattleDriver {
     
     /** A named constant for a failed exit */
     public static final int FAILURE = 1;
-    
+    public static final int SUCCESS = 1;
+
     /**
      * The main entry point into our program. Reads input from the user and 
      * sends the required information to the server.
@@ -48,11 +50,16 @@ public class BattleDriver {
                 if(action.hasNextLine()){
                     String toDo = action.nextLine();
                     client.send(toDo);
+                    if(toDo.trim().equals("/quit")) {
+                        System.exit(SUCCESS);
+                    }
                 }
             }
         } catch (IOException e) {
             System.out.println(e.toString());
         }
+
+        System.exit(SUCCESS);
     } // end main method
 
 } // end BattleDriver class
