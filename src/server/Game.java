@@ -171,25 +171,25 @@ public class Game {
      *
      * @return True if one of the players has zero ships remaining.
      */
-    public boolean isGameOver(){
+    public String isGameOver(){
         boolean over = false;
-        String loser = "";
+        String winner = "";
+        String loser;
         for (int i = 0; i < getNumPlayers(); i++) {
             if(i == 0 || !over){
                 over = shipDestroyed(this.players.get(i));
                 if (over) {
                     loser = this.players.get(i);
+                    leave(loser);
+                    System.out.println(loser + "removed from game");
                 }
             }
         }
-        if(over) {
-            for (String name : this.players) {
-                if (!(loser.equals(name))){
-                    System.out.println(name + " WINS!");
-                }
-            }
+        if(over && this.getNumPlayers() == 1) {
+            winner = this.players.get(0);
+            System.out.println(winner + " WINS!");
         }
-        return over;
+        return winner;
     } // end isGameOver method
 
     /**
