@@ -17,8 +17,10 @@ import java.util.Scanner;
 public class BattleDriver {
     
     /** A named constant for a failed exit */
-    public static final int FAILURE = 1;
-    public static final int SUCCESS = 1;
+    private static final int FAILURE = 1;
+
+    /** A named constant for a successful exit */
+    private static final int SUCCESS = 1;
 
     /**
      * The main entry point into our program. Reads input from the user and 

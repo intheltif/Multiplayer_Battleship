@@ -4,7 +4,8 @@ package server;
  * The driver of the server side of our application. Validates command line 
  * input and creates a BattleServer that listens for remote host requests.
  *
- * @author Evert Ball and Carlee Yancey
+ * @author Evert Ball
+ * @author Carlee Yancey
  * @version 18 November 2019
  */
 public class BattleShipDriver {
