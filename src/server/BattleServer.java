@@ -14,7 +14,8 @@ import java.util.HashMap;
  * off to threads for processing. This class acts as an observer in the 
  * Observer design pattern implementation.
  *
- * @author Evert Ball and Carlee Yancey
+ * @author Evert Ball
+ * @author Carlee Yancey
  * @version 18 November 2019
  *
  */
@@ -71,7 +72,7 @@ public class BattleServer implements MessageListener {
      */
     public void setSize(int size){
         this.size = size;
-    }
+    } // end setSize method
 
     /**
      * Listens for connections from client devices that want to play a game.
@@ -98,6 +99,7 @@ public class BattleServer implements MessageListener {
 
     /**
      * Sends a message to all currently connected <code>Connection agent</code>.
+     * TODO Talk to Dr. Barlowe about having private access
      *
      * @param message The message being sent.
      */
@@ -172,7 +174,7 @@ public class BattleServer implements MessageListener {
             System.out.println("SERVER: " + user + " JOINED THE GAME");
             broadcast("!!! " + user + " has joined");
         }
-    }
+    } // end parseJoin method
 
     /**
      * This method parses a command from a curtain Connection Agent.
@@ -213,7 +215,7 @@ public class BattleServer implements MessageListener {
                     break;
             }
         }
-    }
+    } // end parseCommands method
 
     /**
      * This parses the command for a play command.
@@ -236,7 +238,7 @@ public class BattleServer implements MessageListener {
         }else{
             agent.sendMessage("Game has been Started");
         }
-    }
+    } // end parsePlay method
 
     /**
      * This parses the command for a show command.
@@ -253,24 +255,20 @@ public class BattleServer implements MessageListener {
         String curr = this.connectionAgentToUserMap.get(agent);
         boolean attacked;
         if(!curr.equals(turn)){
-            broadcast("Move Failed, player " +
-                    "turn: " + turn);
+            broadcast("Move Failed, player turn: " + turn);
             System.out.println("MOVED FAILED IN USER: " + curr);
         }else {
             try {
                 col = Integer.parseInt(com[2]);
                 row = Integer.parseInt(com[3]);
             } catch (NumberFormatException nfe) {
-                System.out.println("Attack coordinates must be " +
-                        "integers.");
+                System.out.println("Attack coordinates must be integers.");
             } catch (ArrayIndexOutOfBoundsException aioobe) {
-                System.out.println("Usage: /attack <player> " +
-                        "<col> <row>");
+                System.out.println("Usage: /attack <player> <col> <row>");
             }
             if (col > (this.size - 1) || row > (this.size - 1) ||
                     col < 0 || row < 0) {
-                System.out.println("Usage: /attack <player> " +
-                        "<col> <row>");
+                System.out.println("Usage: /attack <player> <col> <row>");
             }
             if (com.length == attAgr) {
                 if (!turn.equals(com[1])) {
@@ -305,7 +303,7 @@ public class BattleServer implements MessageListener {
                 broadcast(turn + " it is you turn");
             }
         }
-    }
+    } // end parseAttack method
 
     /**
      * This parses the command for a show command.
