@@ -34,7 +34,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             this.socket = socket;
             this.out = new PrintStream(socket.getOutputStream());
             this.in = new Scanner(socket.getInputStream());
-            this.thread =  Thread.currentThread();
+            this.thread =  null;
         } catch(IOException ioe){
 
         }
@@ -82,13 +82,14 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     public void run() {
         try {
             //this.out =  new PrintStream(socket.getOutputStream());
+            this.thread = Thread.currentThread();
             InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
             this.in = new Scanner(inputStream);
-            while(isConnected()) {
-                String message = in.nextLine();
-                //in.reset();
+            String message = in.nextLine();
+            while(!this.thread.isInterrupted() && message != null) {
                 notifyReceipt(message);
                 out.flush();
+                message = in.nextLine();
             }
             this.close();
         } catch (IOException ioe) {

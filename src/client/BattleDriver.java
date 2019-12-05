@@ -47,14 +47,8 @@ public class BattleDriver {
                 //TODO using the scanner in connection agent, to read the messages that
                 // are received by the keyboard.
                 Scanner action = new Scanner(System.in);
-                //String toDo = action.nextLine();
-//                Scanner scan = agent.getIn();
-//                if (scan.hasNext()) {
-//                   // System.out.println("ENTERED IF");
-//                    String command = scan.nextLine();
-//                    client.messageReceived(command, client);
-//                }
-               if(action.hasNext()){
+
+               if(action.hasNextLine()){
                     System.out.println("ENTERED ELSE");
                     String toDo = action.nextLine();
                     client.send(toDo);
