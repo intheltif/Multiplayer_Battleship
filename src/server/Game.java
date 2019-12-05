@@ -50,6 +50,11 @@ public class Game {
         placeShips(nickname);
     } // end join method
 
+    /**
+     * Removes a specified player from the game based on their username.
+     *
+     * @param nickname The username of the user.
+     */
     public void leave(String nickname) {
         if (playerMap.containsKey(nickname)) {
             this.playerMap.remove(nickname);
@@ -65,7 +70,7 @@ public class Game {
      * @param player The player of the grid we need.
      * @return The current grid for player.
      */
-    public Grid getGrid(String player) {
+    private Grid getGrid(String player) {
         return this.playerMap.get(player);
     } // end getGrid method
 
@@ -74,7 +79,7 @@ public class Game {
      *
      * @return The number of ships each player is allowed.
      */
-    public int getTotalShips() {
+    private int getTotalShips() {
         return this.totalShips;
     }
     
@@ -83,11 +88,16 @@ public class Game {
      * TODO Still have to handle clients dropping unexpectedly (ie CTRL+C)
      * @return The number of players in a game.
      */
-    public int getNumPlayers() {
+    private int getNumPlayers() {
         return this.players.size();
 
     } // end getNumPlayers method
 
+    /**
+     * Returns an ArrayList of the current players in the game.
+     *
+     * @return An ArrayList of players.
+     */
     public ArrayList<String> getPlayers(){
         return this.players;
     }
@@ -101,7 +111,7 @@ public class Game {
      * @param column The column of the Grid.
      * @return True if the coordinates hit a ship, false otherwise.
      */
-    public boolean validHit(String player, int row, int column){
+    private boolean validHit(String player, int row, int column){
         boolean valid;
         String hit = "";
         String[][] board = getGrid(player).getBoard();
@@ -132,17 +142,22 @@ public class Game {
      */
     public boolean hit(String nickname, int row, int column){
         String[][] board = getGrid(nickname).getBoard();
-        boolean attacked;
+        boolean attacked = false;
         boolean valid = validHit(nickname, row, column);
-        if(board[row][column].equals("@")|| board[row][column].equals("X")){
-            System.out.println("INVALID MOVE");
-            attacked = false;
-        }else if(valid){
-            board[row][column] = HIT;
-            attacked = true;
-        }else{
-            board[row][column] = MISS;
-            attacked = true;
+        try {
+            if (board[row][column].equals("@") || board[row][column].equals("X")) {
+                System.out.println("INVALID MOVE");
+                attacked = false;
+            } else if (valid) {
+                board[row][column] = HIT;
+                attacked = true;
+            } else {
+                board[row][column] = MISS;
+                attacked = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            System.out.println("Invalid Attack Coordinates. Please choose " +
+                    " valid coordinates.");
         }
         return attacked;
     } // end hit method
@@ -154,7 +169,7 @@ public class Game {
      * @param nickname The player from which to get the grid that is being
      *                 checked.
      */
-    public void clearShip(String nickname,ArrayList<Integer> place){
+    private void clearShip(String nickname,ArrayList<Integer> place){
         String[][] board = getGrid(nickname).getBoard();
         for (int i = 0; i < place.size(); i++) {
             int row = place.get(i);
@@ -204,7 +219,7 @@ public class Game {
      *               checked.
      * @return over If all the ships are destroyed.
      */
-    public boolean shipDestroyed(String player) {
+    private boolean shipDestroyed(String player) {
         boolean over = true;
         String[][] board = getGrid(player).getBoard();
         for(int i = 0; i < board.length; i++){
@@ -231,7 +246,7 @@ public class Game {
      *
      * @param size One way size of the grid.
      */
-    public void setTotalShips(int size){
+    private void setTotalShips(int size){
         Random r = new Random();
         if(size == 10){
             //random # between 4-6
@@ -253,7 +268,7 @@ public class Game {
      *
      * @param nickname The name of the player.
      */
-    public void placeShips(String nickname){
+    private void placeShips(String nickname){
         String[][] board = getGrid(nickname).getBoard();
         Random r = new Random();
         for(int i=0; i < getTotalShips(); i++) {
@@ -319,7 +334,7 @@ public class Game {
      * @param board The board being placed on.
      * @param nickname The name of the owner of the board.
      */
-    public void singlePlaceShip(Ship ship, String[][] board, String nickname){
+    private void singlePlaceShip(Ship ship, String[][] board, String nickname){
         Random r = new Random();
         ArrayList<Integer> place = new ArrayList<>();
         int oldRow, oldCol, way, row, col;
@@ -387,9 +402,4 @@ public class Game {
         }
     }//end of singlePlaceShip
 
-    public static void main(String[] args){
-        Game g = new Game(10);
-        g.join("rob", 10);
-        g.show("rob","rob");
-    }
 } // end Game class

@@ -29,7 +29,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     private Thread thread;
 
     /**
-     * This is a Constructor for a connection Agent
+     * This is a constructor for a <code>ConnectionAgent</code>.
      *
      * @param socket Socket to connect to a separate host through.
      */
@@ -101,7 +101,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             System.err.println("IOException in the thread.");
             System.exit(1);
         } catch(NoSuchElementException nsee) {
-
+            // Do nothing. Fixing error in server.
         } // end try-catch
     } // end run method
 

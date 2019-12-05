@@ -63,7 +63,7 @@ public class BattleClient extends MessageSource implements MessageListener {
      *
      * @return The name of the host.
      */
-    public InetAddress getHostname(){
+    private InetAddress getHostname(){
         return this.hostname;
     }
 
@@ -72,7 +72,7 @@ public class BattleClient extends MessageSource implements MessageListener {
      *
      * @return The username.
      */
-    public String getUsername(){
+    private String getUsername(){
         return this.username;
     }
 
