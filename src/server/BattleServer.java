@@ -21,6 +21,9 @@ import java.util.HashMap;
  */
 public class BattleServer implements MessageListener {
 
+    /** Allows us to reset the game */
+    private static final int FIRST_INDEX = 0;
+
     /** The welcoming socket that clients connect through */
     private ServerSocket serverSocket;
 
@@ -107,7 +110,7 @@ public class BattleServer implements MessageListener {
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
-                agent.sendMessage("*** " + message + " ***");
+                agent.sendMessage(message);
             }
         }
     } // end broadcast method
@@ -283,6 +286,7 @@ public class BattleServer implements MessageListener {
                             this.current++;
                             String over = game.isGameOver();
                             if (!over.equals("")) {
+                                this.current = FIRST_INDEX;
                                 System.out.println("GAME OVER: " + over +
                                         " WINS!");
                                 broadcast("GAME OVER: " + over + " WINS!");
@@ -338,6 +342,7 @@ public class BattleServer implements MessageListener {
         game.leave(user);
         String over = game.isGameOver();
         if (!over.equals("")) {
+            this.current = FIRST_INDEX;
             System.out.println("GAME OVER: " + over +
                     " WINS!");
             broadcast("GAME OVER: " + over + " WINS!");

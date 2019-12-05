@@ -2,6 +2,7 @@ package common;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -87,7 +88,9 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             this.in = new Scanner(inputStream);
             String message = in.nextLine();
             while(!this.thread.isInterrupted() && message != null) {
-                if(!message.equals("")) {
+                if(!thread.isAlive()) {
+                    return;
+                } else if(!message.equals("")) {
                     notifyReceipt(message);
                 }
                 out.flush();
@@ -97,6 +100,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         } catch (IOException ioe) {
             System.err.println("IOException in the thread.");
             System.exit(1);
+        } catch(NoSuchElementException nsee) {
+
         } // end try-catch
     } // end run method
 
