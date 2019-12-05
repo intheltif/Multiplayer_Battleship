@@ -3,7 +3,6 @@ package client;
 import common.ConnectionAgent;
 import common.MessageListener;
 import common.MessageSource;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -20,7 +19,7 @@ import java.net.Socket;
  * @author Carlee Yancey
  * @version 18 November 2019
  */
-public class BattleClient extends MessageSource implements MessageListener  {
+public class BattleClient extends MessageSource implements MessageListener {
 
     /** The name of the host */
     private InetAddress hostname;
@@ -45,7 +44,8 @@ public class BattleClient extends MessageSource implements MessageListener  {
      * @param username The username of the BattleClient.
      * @throws IOException If a network error occurs.
      */
-    public BattleClient(String hostname, int port, String username) throws IOException {
+    public BattleClient(String hostname, int port, String username)
+            throws IOException {
         this.port = port;
         this.username = username;
         this.hostname =  InetAddress.getByName(hostname);
@@ -103,26 +103,19 @@ public class BattleClient extends MessageSource implements MessageListener  {
      */
     @Override
     public void messageReceived(String message, MessageSource source) {
-        //TODO Finish method, ?where it prints the message of this curtain client
-        // or is this with the PrintStreamMessageListener?
-        //agent.getOut().print(message);
-       // System.out.println("I received a message");
         //System.out.println(message);
         print.messageReceived(message,source);
-       //System.out.println("I printed that message!");
-        //agent.getOut().flush();
-       // System.out.println("Message received in client: " + message);
     } //end messageReceived
 
     /**
-     * Used to notify observers that the subject will not receive new messages; observers can
-     * deregister themselves.
+     * Used to notify observers that the subject will not receive new messages;
+     * observers can deregister themselves.
      *
-     * @param source The <code>MessageSource</code> that does not expect more messages.
+     * @param source The <code>MessageSource</code> that does not expect more
+     *               messages.
      */
     @Override
     public void sourceClosed(MessageSource source) {
-        //TODO finish writing
         source.removeMessageListener(this);
     } //end sourceClosed
 
