@@ -44,15 +44,12 @@ public class BattleDriver {
             BattleClient client = new BattleClient(hostname,port,username);
             ConnectionAgent agent = client.getAgent();
             while(agent.isConnected()) {
-                //TODO using the scanner in connection agent, to read the messages that
-                // are received by the keyboard.
                 Scanner action = new Scanner(System.in);
-
-               if(action.hasNextLine()){
+                if(action.hasNextLine()){
                     System.out.println("ENTERED ELSE");
                     String toDo = action.nextLine();
                     client.send(toDo);
-                    action.close();
+                    //action.close();
                 }
             }
         } catch (IOException e) {

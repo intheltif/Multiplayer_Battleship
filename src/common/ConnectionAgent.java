@@ -48,7 +48,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
      */
     public void sendMessage(String message) {
         this.out.println(message);
-        this.out.flush();
+        //this.out.flush();
     } // end sendMessage method
 
     /**
@@ -87,11 +87,15 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             this.in = new Scanner(inputStream);
             String message = in.nextLine();
             while(!this.thread.isInterrupted() && message != null) {
-                notifyReceipt(message);
+                if(!message.equals("")) {
+                    //System.out.println("MSG: " + message);
+                    notifyReceipt(message);
+                    //System.out.println("Made it passed notify");
+                }
                 out.flush();
                 message = in.nextLine();
             }
-            this.close();
+            //this.close();
         } catch (IOException ioe) {
             System.err.println("IOException in the thread.");
             System.exit(1);

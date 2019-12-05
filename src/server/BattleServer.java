@@ -120,6 +120,7 @@ public class BattleServer implements MessageListener {
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
+                System.out.println("USER IN BROADAST: " + this.connectionAgentToUserMap.get(agent));
                 agent.sendMessage("*** " + message + " ***");
             }
         }
@@ -190,7 +191,9 @@ public class BattleServer implements MessageListener {
                     user = this.connectionAgentToUserMap.get(agent);
                     System.out.println("SERVER: " + user + " joined the game");
                     this.game.join(com[1],5); //TODO Handle the grid size
+
                     broadcast("!!! " + user + " has joined");
+                    System.out.println("Made it past broadcast");
                     break;
             }
         }
