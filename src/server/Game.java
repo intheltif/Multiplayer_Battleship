@@ -181,13 +181,13 @@ public class Game {
                 if (over) {
                     loser = this.players.get(i);
                     leave(loser);
-                    System.out.println(loser + "removed from game");
+                    System.out.println(loser + " REMOVED FROM THE GAME");
                 }
             }
         }
         if(over && this.getNumPlayers() == 1) {
             winner = this.players.get(0);
-            System.out.println(winner + " WINS!");
+            System.out.println("GAME OVER: "+ winner + " WINS!");
         }
         return winner;
     } // end isGameOver method
