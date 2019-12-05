@@ -35,6 +35,7 @@ public class PrintStreamMessageListener implements MessageListener {
      * @param message The message received by the subject
      * @param source  The source from which this message originated (if needed).
      */
+    @Override
     public void messageReceived(String message, MessageSource source) {
         System.out.println(message);
     } // end messageReceived method
@@ -46,6 +47,7 @@ public class PrintStreamMessageListener implements MessageListener {
      * @param source The <code>MessageSource</code> that does not expect more
      *               messages.
      */
+    @Override
     public void sourceClosed(MessageSource source) {
         source.removeMessageListener(this);
     } // end sourceClosed method
