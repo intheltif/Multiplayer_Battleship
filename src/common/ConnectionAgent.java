@@ -18,7 +18,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     /** Socket to connect to a separate host through */
     private Socket socket;
 
-    /** ??? */
+    /** Reads Input */
     private Scanner in;
 
     /** The stream to print output to */
@@ -27,28 +27,28 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     /** The thread to start this thread running */
     private Thread thread;
 
+    /**
+     * This is a Constructor for a connection Agent
+     *
+     * @param socket Socket to connect to a separate host through.
+     */
     public ConnectionAgent(Socket socket) {
-        //TODO Not certain this is the correct implementation. 
-        //     Going with it for now.
         try {
             this.socket = socket;
             this.out = new PrintStream(socket.getOutputStream());
             this.in = new Scanner(socket.getInputStream());
             this.thread =  null;
         } catch(IOException ioe){
-
+            System.out.println(ioe.toString());
         }
     } // end ConnectionAgent constructor w/ socket
-    public Socket getSocket(){
-        return this.socket;
-    }
+
     /**
      * Sends a message as a String between hosts.
      * @param message The message to send between hosts.
      */
     public void sendMessage(String message) {
         this.out.println(message);
-        //this.out.flush();
     } // end sendMessage method
 
     /**
@@ -82,7 +82,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     public void run() {
         try {
             this.thread = Thread.currentThread();
-            InputStreamReader inputStream = new InputStreamReader(socket.getInputStream());
+            InputStreamReader inputStream =
+                    new InputStreamReader(socket.getInputStream());
             this.in = new Scanner(inputStream);
             String message = in.nextLine();
             while(!this.thread.isInterrupted() && message != null) {
@@ -97,17 +98,7 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             System.err.println("IOException in the thread.");
             System.exit(1);
         } // end try-catch
-
     } // end run method
-
-    /**
-     * This gets the scanner that the connection agent uses.
-     *
-     * @return The in scanner.
-     */
-    public Scanner getIn(){
-        return this.in;
-    }
 
     /**
      * This method gets the connection agents PrintStream
