@@ -161,9 +161,11 @@ public class BattleServer implements MessageListener {
      */
     public void sourceClosed(MessageSource source) {
         // Remove the subject from all collections/maps associated with it
-        conAgentCollection.remove(source);
-        userToConnectionAgentMap.remove(source);
-        connectionAgentToUserMap.remove(source);
+        String user = connectionAgentToUserMap.get(source);
+        ConnectionAgent ca = userToConnectionAgentMap.get(user);
+        conAgentCollection.remove(ca);
+        userToConnectionAgentMap.remove(user);
+        connectionAgentToUserMap.remove(ca);
 
     } // end sourceClosed method
 
@@ -238,11 +240,10 @@ public class BattleServer implements MessageListener {
                     }
                     break;
                 case "/quit":
-                    //TODO make the quit command work right
                     user = this.connectionAgentToUserMap.get(agent);
-                    agent.sendMessage("!!! " + user + "surrendered");
+                    broadcast("!!! " + user + " surrendered");
                     sourceClosed(agent);
-                   // game.leave(user);
+                    game.leave(user);
                     break;
             }
         }
