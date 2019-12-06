@@ -18,6 +18,18 @@ public class Game {
     /** The string for a Miss */
     private static final String MISS = "X";
 
+    /** A Constant representation of zero */
+    private static final int ZERO = 0;
+
+    /** A Constant representation of one */
+    private static final int ONE = 1;
+
+    /** A Constant representation of two */
+    private static final int TWO = 2;
+
+    /**  A Constant representation of negative one */
+    private static final int NEGONE = -1;
+
     /** The number of ships each player gets */
     private int totalShips;
 
@@ -113,7 +125,7 @@ public class Game {
      */
     private boolean validHit(String player, int row, int column){
         boolean valid;
-        String hit = "";
+        String hit;
         String[][] board = getGrid(player).getBoard();
         try{
             hit = board[row][column];
@@ -145,7 +157,8 @@ public class Game {
         boolean attacked = false;
         boolean valid = validHit(nickname, row, column);
         try {
-            if (board[row][column].equals("@") || board[row][column].equals("X")) {
+            if (board[row][column].equals("@") ||
+                    board[row][column].equals("X")){
                 System.out.println("INVALID MOVE");
                 attacked = false;
             } else if (valid) {
@@ -173,7 +186,7 @@ public class Game {
         String[][] board = getGrid(nickname).getBoard();
         for (int i = 0; i < place.size(); i++) {
             int row = place.get(i);
-            int col = place.get(i+1);
+            int col = place.get(i + ONE);
             board[row][col] = " ";
             i++;
         }
@@ -191,7 +204,7 @@ public class Game {
         String winner = "";
         String loser;
         for (int i = 0; i < getNumPlayers(); i++) {
-            if(i == 0 || !over){
+            if(i == ZERO || !over){
                 over = shipDestroyed(this.players.get(i));
                 if (over) {
                     loser = this.players.get(i);
@@ -202,11 +215,11 @@ public class Game {
         }
         /* If the there are only two players and one quits over will still be
         true thus the need for the else if. */
-        if(over && this.getNumPlayers() == 1) {
-            winner = this.players.get(0);
+        if(over && this.getNumPlayers() == ONE) {
+            winner = this.players.get(ZERO);
             System.out.println("GAME OVER: "+ winner + " WINS!");
-        }else if(this.getNumPlayers() == 1){
-            winner = this.players.get(0);
+        }else if(this.getNumPlayers() == ONE){
+            winner = this.players.get(ZERO);
             System.out.println("GAME OVER: "+ winner + " WINS!");
         }
         return winner;
@@ -248,6 +261,7 @@ public class Game {
      */
     private void setTotalShips(int size){
         Random r = new Random();
+        //TODO ask about these magic numbers
         if(size == 10){
             //random # between 4-6
             this.totalShips = r.nextInt(7 - 4) + 4;
@@ -271,25 +285,26 @@ public class Game {
     private void placeShips(String nickname){
         String[][] board = getGrid(nickname).getBoard();
         Random r = new Random();
-        for(int i=0; i < getTotalShips(); i++) {
-            int randShipType = r.nextInt(5);
+        int totalPossTypes = 5;
+        for(int i = 0; i < getTotalShips(); i++) {
+            int randShipType = r.nextInt(totalPossTypes);
             switch(randShipType) {
                 case 0:
                      singlePlaceShip(Ship.CARRIER, board, nickname);
                     break;
-               case 1:
+                case 1:
                    singlePlaceShip(Ship.BATTLESHIP, board, nickname);
                    break;
-               case 2:
+                case 2:
                   singlePlaceShip(Ship.CRUISER, board , nickname);
                  break;
-               case 3:
+                case 3:
                    singlePlaceShip(Ship.SUBMARINE, board, nickname);
                    break;
-               case 4:
+                case 4:
                    singlePlaceShip(Ship.DESTROYER, board, nickname);
                    break;
-               default:
+                default:
                    System.out.println("Outside range of ship types");
             } // end switch statement
         } // end for loop
@@ -323,7 +338,6 @@ public class Game {
      */
     public String turn(int turns){
         return this.players.get(turns++);
-
     }
 
     /**
@@ -337,55 +351,55 @@ public class Game {
         Random r = new Random();
         ArrayList<Integer> place = new ArrayList<>();
         int oldRow, oldCol, way, row, col;
-        oldRow = oldCol = way = row = col = -1;
-        int direction = r.nextInt(2);
+        oldRow = oldCol = way = row = col = NEGONE;
+        int direction = r.nextInt(TWO);
         for(int j = 0; j < ship.getSize(); j++) {
-            if (j == 0) {
+            if (j == ZERO) {
                 row = r.nextInt(board.length);
-            } else if (direction == 1) { // if dir=1, keep row
+            } else if (direction == ONE) { // if dir=1, keep row
                 row = oldRow;
             }else { // if dir=0, find a row
-                if(j == 1){
-                    if(oldRow > (board.length / 2)){
-                        row = oldRow-1;
-                        way = 0; // way=0 --> go west
+                if(j == ONE){
+                    if(oldRow > (board.length / TWO)){
+                        row = oldRow - ONE;
+                        way = ZERO; // way=0 --> go west
                     }else{
-                        row = oldRow+1;
-                        way = 1; // way=1 --> go east
+                        row = oldRow + ONE;
+                        way = ONE; // way=1 --> go east
                     }
-                }else if( j > 1){
-                    if(way == 0){
-                        row = oldRow-1;
-                    }else if(way == 1){
-                        row = oldRow+1;
+                }else if( j > ONE){
+                    if(way == ZERO){
+                        row = oldRow - ONE;
+                    }else if(way == ONE){
+                        row = oldRow + ONE;
                     }
                 }
             }
-            if (j == 0) {
+            if (j == ZERO) {
                 col = r.nextInt(board[row].length);
-            } else if (direction == 0) {
+            } else if (direction == ZERO) {
                 col = oldCol;
             }else {
-                if(j == 1){
-                    if(oldCol > (board.length/2)){
-                        col = oldCol-1;
-                        way = 0;
+                if(j == ONE){
+                    if(oldCol > (board.length / TWO)){
+                        col = oldCol - ONE;
+                        way = ZERO;
                     }else{
-                        col = oldCol+ 1;
-                        way = 1;
+                        col = oldCol + ONE;
+                        way = ONE;
                     }
-                }else if(j > 1){
-                    if(way == 0){
-                        col = oldCol-1;
-                    }else if(way == 1){
-                        col = oldCol+1;
+                }else if(j > ONE){
+                    if(way == ZERO){
+                        col = oldCol - ONE;
+                    }else if(way == ONE){
+                        col = oldCol + ONE;
                     }
                 }
             }
-            if(row >= board.length || col >= board.length || row < 0
-                    || col < 0 || !(board[row][col].equals( " "))){
+            if(row >= board.length || col >= board.length || row < ZERO
+                    || col < ZERO || !(board[row][col].equals(" "))){
                 clearShip(nickname,place);
-                j = -1;
+                j = NEGONE;
                 row = r.nextInt(board.length);
                 col = r.nextInt(board.length);
                 oldCol = col;
@@ -400,5 +414,4 @@ public class Game {
             }
         }
     }//end of singlePlaceShip
-
 } // end Game class
