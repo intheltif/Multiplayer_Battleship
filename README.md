@@ -18,9 +18,6 @@ DR. BARLOWE NOTE: We demo-ed this project to you at 0900hrs on 11/19/2019.
 
                   Thanks again for understanding!
 
-
-
-
 A client-server implementation of a game of Battleship.
 Allows players to join, play, and disconnect from a command line version of a
 game of Battleship. Players can see their boards along with the placement of
