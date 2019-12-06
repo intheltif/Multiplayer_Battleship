@@ -119,20 +119,11 @@ public class Grid {
     /**
      * This sets the grid up with a blank space.
      */
-    public void setUpBoard(){
+    private void setUpBoard(){
         for(int i = 0; i < (this.board.length); i++){
             for(int j = 0; j < (this.board.length); j++){
               this.board[i][j] = " ";
             }
         }
-    }
-
-    /**
-     * Used for testing of printing board.
-     */
-    public static void main(String[] args) {
-        Grid grid = new Grid();
-        grid.setUpBoard();
-        grid.printPartialGrid();
     }
 } // end Grid class

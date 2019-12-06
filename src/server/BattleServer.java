@@ -332,13 +332,12 @@ public class BattleServer implements MessageListener {
      * @param agent The current connection agent.
      */
     private void parseShow(String command, ConnectionAgent agent){
-        int showArgs = TWO;
         String[] com = command.trim().split("\\s+");
         String board;
         String curr = this.connectionAgentToUserMap.get(agent);
         System.out.println("PARSE COMMANDS: " + command +
                 " USER: " + curr);
-        if (com.length == showArgs) {
+        if (com.length == TWO) {
             board = game.show(com[1], curr);
             agent.sendMessage(board);
         }
