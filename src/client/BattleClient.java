@@ -80,7 +80,7 @@ public class BattleClient extends MessageSource implements MessageListener {
      * This connects the battleClient using its connection agent to the
      * battleship game.
      */
-    public void connect(){
+    private void connect(){
         String join = "/join ";
         join = join.concat(this.getUsername());
         this.send(join);
