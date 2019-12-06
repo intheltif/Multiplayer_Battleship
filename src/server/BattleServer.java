@@ -142,7 +142,6 @@ public class BattleServer implements MessageListener {
     public void messageReceived(String message, MessageSource source) {
         ConnectionAgent ca;
         String user;
-        //ConnectionAgent checkCA
         if(!started) {
             ca = this.conAgentCollection.get(this.conAgentCollection.size()-1);
             user = this.connectionAgentToUserMap.get(ca);
@@ -357,7 +356,9 @@ public class BattleServer implements MessageListener {
      * @param agent The <code>ConnectionAgent</code> that sent the command.
      */
     private void parseQuit(String command, ConnectionAgent agent) {
-        this.current--;
+        if(this.current == (conAgentCollection.size() - 1)) {
+            this.current = 0;
+        }
         String user = this.connectionAgentToUserMap.get(agent);
         System.out.println("PARSE COMMANDS: " + command +
                 " USER: " + user);
