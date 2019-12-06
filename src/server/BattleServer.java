@@ -268,8 +268,8 @@ public class BattleServer implements MessageListener {
      */
     private void parseAttack(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
-        if(this.current > (conAgentCollection.size() - 1)) {
-            this.current = 0;
+        if(this.current > (conAgentCollection.size() - ONE)) {
+            this.current = ZERO;
         }
         String turn = this.game.turn(this.current);
         int col = NEGONE;
@@ -322,8 +322,8 @@ public class BattleServer implements MessageListener {
                         curr);
             }
             if(started) {
-                if(this.current > (this.conAgentCollection.size() - 1)) {
-                    this.current = 0;
+                if(this.current > (this.conAgentCollection.size() - ONE)) {
+                    this.current = ZERO;
                 }
                 turn = game.turn(this.current);
                 System.out.println(turn + " it is your turn");
@@ -345,7 +345,7 @@ public class BattleServer implements MessageListener {
         System.out.println("PARSE COMMANDS: " + command +
                 " USER: " + curr);
         if (com.length == TWO) {
-            board = game.show(com[1], curr);
+            board = game.show(com[ONE], curr);
             agent.sendMessage(board);
         }
     }
