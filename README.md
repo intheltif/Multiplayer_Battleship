@@ -1,22 +1,9 @@
+# Battleship
 *Author: Evert Ball*
 
 *Author: Carlee Yancey*
 
-# Battleship
-
 ## Description
-
-DR. BARLOWE NOTE: We demo-ed this project to you at 0900hrs on 11/19/2019.
-                  I spoke to you at approximately 1230hrs on 11/21/2019 about 
-                  forgetting to actually submit the project to you on Agora 
-                  and we agreed that I could submit it to you today.
-
-                  You should be able to view any changes made and when they 
-                  were made by entering the command "git log" to see each of
-                  our commits. The last commit that exists should be up to
-                  when we demo-ed the project to you.
-
-                  Thanks again for understanding!
 
 A client-server implementation of a game of Battleship.
 Allows players to join, play, and disconnect from a command line version of a
@@ -58,21 +45,22 @@ Ship.java
 ```bash
 >java server/BattleShipDriver <Port Number> <Grid Size (5-10)>
 
->java client/BattleDriver <Host> <Port Number> <username>
+>java client/BattleDriver <Host> <Port Number> <username> **
 ```
+###### ** There can be multiple clients added to the game before the game is started
 
 **Commands for Clients:**
 ```bash
 /play
 /show <username>
-/attack <username> <[0-9]+> <[0-9]+> *
+/attack <username> <[0-9]+> <[0-9]+> **
 /quit
 /help
 ```
     
-###### * The range of for attack is based off the board size that you use.
+###### ** The range of for attack is based off the board size that you use.
 
-**Commands for Server:**
+**Server Logging:**
 ```bash
 * Will display which client connection Agent is sending what command to the the 
     servers connection agent. 
@@ -85,11 +73,27 @@ Ship.java
 * Will display who's current turn during the game.
 ```
 
+## Implantation Reasoning 
+**PrintMessageListener**
+* The way we interpreted PrintMessageListener is that when a BattleClient 
+receives a message the PrintMessageListener is called and the message is printed 
+in messageReceived to the console.
+
+**Public to Private:**
+* Broadcast in BattleServer is only used in battleSever, thus there is no 
+need for any other class to have access to the broadcast method.
+ 
+* Close in the Connection agent
+
+* Connect in BattleClient, the only place that a BattleClient should call 
+connect is in the constructor of BattleClient. 
+
 ## Known Issues
 
 **_Release as of 11/20/2019_**
-    * There are currently no known issues.
-    
+
+* There are currently no known issues.
+  
 **_Release as of 12/6/2019_**
     
 * Once a game has been started one more client can still join

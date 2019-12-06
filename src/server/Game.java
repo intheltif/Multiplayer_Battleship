@@ -27,8 +27,32 @@ public class Game {
     /** A Constant representation of two */
     private static final int TWO = 2;
 
-    /**  A Constant representation of negative one */
+    /** A Constant representation of negative one */
     private static final int NEGONE = -1;
+
+    /** A Constant representation of ten */
+    private static final int TEN = 10;
+
+    /** A Constant representation of seven */
+    private static final int SEVEN = 7;
+
+    /** A Constant representation of four */
+    private static final int FOUR = 4;
+
+    /** A Constant representation of nine */
+    private static final int NINE = 9;
+
+    /** A Constant representation of eight */
+    private static final int EIGHT = 8;
+
+    /** A Constant representation of six */
+    private static final int SIX = 6;
+
+    /** A Constant representation of three */
+    private static final int THREE = 3;
+
+    /** A Constant representation of five */
+    private static final int FIVE  = 5;
 
     /** The number of ships each player gets */
     private int totalShips;
@@ -261,19 +285,19 @@ public class Game {
      */
     private void setTotalShips(int size){
         Random r = new Random();
-        //TODO ask about these magic numbers
-        if(size == 10){
+        // These are representations of numbers
+        if(size == TEN){
             //random # between 4-6
-            this.totalShips = r.nextInt(7 - 4) + 4;
-        }else if(size == 9 || size == 8){
+            this.totalShips = r.nextInt(SEVEN - FOUR) + FOUR;
+        }else if(size == NINE || size == EIGHT){
             //random # between 3-5
-            this.totalShips = r.nextInt(6 - 3) + 3;
-        }else if(size == 7 || size == 6) {
+            this.totalShips = r.nextInt(SIX - THREE) + THREE;
+        }else if(size == SEVEN || size == SIX) {
             //random # between 2-3
-            this.totalShips = r.nextInt(4 - 2) + 2;
-        }else if(size == 5){
+            this.totalShips = r.nextInt(FOUR - TWO) + TWO;
+        }else if(size == FIVE){
             //random # between 1-2
-            this.totalShips = r.nextInt(3 - 1) + 1;
+            this.totalShips = r.nextInt(THREE - ONE) + ONE;
         }
     } // end setTotalShips method
 
@@ -285,23 +309,22 @@ public class Game {
     private void placeShips(String nickname){
         String[][] board = getGrid(nickname).getBoard();
         Random r = new Random();
-        int totalPossTypes = 5;
         for(int i = 0; i < getTotalShips(); i++) {
-            int randShipType = r.nextInt(totalPossTypes);
+            int randShipType = r.nextInt(FIVE);
             switch(randShipType) {
-                case 0:
+                case ZERO:
                      singlePlaceShip(Ship.CARRIER, board, nickname);
                     break;
-                case 1:
+                case ONE:
                    singlePlaceShip(Ship.BATTLESHIP, board, nickname);
                    break;
-                case 2:
+                case TWO:
                   singlePlaceShip(Ship.CRUISER, board , nickname);
                  break;
-                case 3:
+                case THREE:
                    singlePlaceShip(Ship.SUBMARINE, board, nickname);
                    break;
-                case 4:
+                case FOUR:
                    singlePlaceShip(Ship.DESTROYER, board, nickname);
                    break;
                 default:
