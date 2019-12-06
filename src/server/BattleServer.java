@@ -102,11 +102,15 @@ public class BattleServer implements MessageListener {
                 if(!started) {
                     ConnectionAgent agent =
                             new ConnectionAgent(this.serverSocket.accept());
-                    if (agent.isConnected()) {
-                        agent.addMessageListener(this);
-                        Thread thread = new Thread(agent);
-                        thread.start();
-                        conAgentCollection.add(agent);
+                    if(!started) {
+                        if (agent.isConnected()) {
+                            agent.addMessageListener(this);
+                            Thread thread = new Thread(agent);
+                            thread.start();
+                            conAgentCollection.add(agent);
+                        }
+                    }else{
+                        agent.sendMessage("Game In Progress, Unable to join");
                     }
                 }
             } catch (IOException ioe) {
@@ -240,7 +244,14 @@ public class BattleServer implements MessageListener {
      */
     private void parsePlay(ConnectionAgent agent){
         String user;
+        ArrayList<ConnectionAgent> closed = new ArrayList<>();
         if(this.conAgentCollection.size() >= TWO && !started){
+            for (ConnectionAgent check : this.conAgentCollection) {
+                if(check.getSocket().isClosed()){
+                    closed.add(check);
+                }
+            }
+            removeCA(closed);
             user = this.connectionAgentToUserMap.get(agent);
             String player = game.getPlayers().get(ZERO);
             started = true;
@@ -248,6 +259,7 @@ public class BattleServer implements MessageListener {
             broadcast(player + " it is you turn");
             System.out.println("PARSE COMMANDS: " + user +
                     " STARTED THE GAME");
+
         }else if (!started){
             agent.sendMessage("Not enough players to play the " +
                     "game");
@@ -412,5 +424,11 @@ public class BattleServer implements MessageListener {
         int column = Integer.parseInt(command[TWO]);
         String nickname  = command[ONE];
         return game.hit(nickname, row, column);
+    }
+
+    public void removeCA(ArrayList<ConnectionAgent> closed){
+        for (ConnectionAgent agent : closed) {
+            parseQuit("/quit", agent);
+        }
     }
 } // end BattleServer class

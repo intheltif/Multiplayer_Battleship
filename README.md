@@ -96,7 +96,5 @@ connect is in the constructor of BattleClient.
   
 **_Release as of 12/6/2019_**
     
-* Once a game has been started one more client can still join
-the game. But if another try's to join is when does not allow 
-for that client to join.
+* There are currently no known issues.
     

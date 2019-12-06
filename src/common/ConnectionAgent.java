@@ -60,14 +60,17 @@ public class ConnectionAgent extends MessageSource implements Runnable {
      */
     public boolean isConnected() {
         return this.socket.isConnected();
-
     } // end isConnected method
 
+    public Socket getSocket(){
+        return this.socket;
+    }
     /**
      * Closes the connection between two hosts.
      */
     private void close() {
         try {
+            thread.interrupt();
             this.socket.close();
         } catch( IOException ioe) {
             System.out.println("Failure closing connection. IO Error.");
@@ -101,7 +104,11 @@ public class ConnectionAgent extends MessageSource implements Runnable {
             System.err.println("IOException in the thread.");
             System.exit(1);
             this.sendMessage("/quit");
+            this.close();
         } catch(NoSuchElementException nsee) {
+            this.sendMessage("/quit");
+            this.close();
+            //System.out.println(this.isConnected());
             // Do nothing. Fixing error in server.
         } // end try-catch
     } // end run method

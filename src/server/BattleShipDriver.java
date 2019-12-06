@@ -19,6 +19,8 @@ public class BattleShipDriver {
     /** The valid number of command line args */
     private static final int NUM_ARGS = 2;
     
+    private static final int DEFAULTSIZE = 10;
+    
     /** Usage message to print when program is used incorrectly */
     private static final String USAGE_MSG = ("Usage is: java " +
             "BattleShipDriver <port> <board_size>)");
@@ -39,13 +41,17 @@ public class BattleShipDriver {
         int port = -1;
         int size = -1;
         // Validate correct number of arguments.
-        if(args.length != NUM_ARGS) {
+        if( 1  > args.length || args.length > 2  ) {
             System.out.println(USAGE_MSG);
             System.exit(FAILURE);
         }
         try{
             port = Integer.parseInt(args[0]);
-            size = Integer.parseInt(args[1]);
+            if(args.length == NUM_ARGS) {
+                size = Integer.parseInt(args[1]);
+            }else{
+                size = DEFAULTSIZE;
+            }
         } catch(NumberFormatException nfe) {
             System.err.println("Invalid argument type. Arguments must be of" +
                                    "integers.");
