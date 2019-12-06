@@ -267,6 +267,9 @@ public class BattleServer implements MessageListener {
      */
     private void parseAttack(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
+        if(this.current > (conAgentCollection.size() - 1)) {
+            this.current = 0;
+        }
         String turn = this.game.turn(this.current);
         int col = NEGONE;
         int row = NEGONE;
@@ -318,9 +321,12 @@ public class BattleServer implements MessageListener {
                         curr);
             }
             if(started) {
+                if(this.current > (this.conAgentCollection.size() - 1)) {
+                    this.current = 0;
+                }
                 turn = game.turn(this.current);
-                System.out.println(turn + " it is you turn");
-                broadcast(turn + " it is you turn");
+                System.out.println(turn + " it is your turn");
+                broadcast(turn + " it is your turn");
             }
         }
     } // end parseAttack method

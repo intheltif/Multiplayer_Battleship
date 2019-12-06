@@ -360,8 +360,7 @@ public class Game {
      * @return Who's turn of the game.
      */
     public String turn(int turns){
-        int turn = turns % getNumPlayers();
-        return this.players.get(turn);
+        return this.players.get(turns++);
     }
 
     /**
