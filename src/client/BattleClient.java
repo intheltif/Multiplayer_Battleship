@@ -84,7 +84,6 @@ public class BattleClient extends MessageSource implements MessageListener {
         String join = "/join ";
         join = join.concat(this.getUsername());
         this.send(join);
-
     } //end connect
 
     /**
@@ -125,7 +124,5 @@ public class BattleClient extends MessageSource implements MessageListener {
      */
     public void send(String message){
         agent.sendMessage(message);
-
     } //end send
-
 } // end BattleClient class

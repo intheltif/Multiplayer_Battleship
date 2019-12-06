@@ -63,8 +63,6 @@ public class BattleServer implements MessageListener {
     /** The size of the Grid */
     private int size;
 
-
-
     /**
      * This is the constructor for the BattleServer, it ask for a port
      * number for its Server Socket.
@@ -119,7 +117,6 @@ public class BattleServer implements MessageListener {
 
     /**
      * Sends a message to all currently connected <code>Connection agent</code>.
-     * TODO Talk to Dr. Barlowe about having private access
      *
      * @param message The message being sent.
      */

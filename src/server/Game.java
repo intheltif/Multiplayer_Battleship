@@ -285,7 +285,6 @@ public class Game {
      */
     private void setTotalShips(int size){
         Random r = new Random();
-        // These are representations of numbers
         if(size == TEN){
             //random # between 4-6
             this.totalShips = r.nextInt(SEVEN - FOUR) + FOUR;
