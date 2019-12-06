@@ -123,7 +123,7 @@ public class BattleServer implements MessageListener {
      *
      * @param message The message being sent.
      */
-    public void broadcast(String message) {
+    private void broadcast(String message) {
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
@@ -356,6 +356,7 @@ public class BattleServer implements MessageListener {
      * @param agent The <code>ConnectionAgent</code> that sent the command.
      */
     private void parseQuit(String command, ConnectionAgent agent) {
+        this.current++;
         String user = this.connectionAgentToUserMap.get(agent);
         System.out.println("PARSE COMMANDS: " + command +
                 " USER: " + user);
@@ -369,6 +370,10 @@ public class BattleServer implements MessageListener {
                     " WINS!");
             broadcast("GAME OVER: " + over + " WINS!");
             started = false;
+        } else {
+            String turn = game.turn(this.current);
+            System.out.println(turn + " it is yoru turn");
+            broadcast(turn + " it is your turn");
         }
     } // end parseQuit method
 
