@@ -59,18 +59,18 @@ public class Grid {
     public String printGrid(){
         String board = "";
         for(int i = 0; i < this.board.length + ONE; i++){
-            if(i != 0) {
+            if(i != ZERO) {
                 board = board.concat((i - ONE) + " | ");
             }
             for(int j = 0; j < this.board.length; j++){
-                if(i == 0){
-                    if(j == 0){
+                if(i == ZERO){
+                    if(j == ZERO){
                         board = board.concat("    " + j + "   ");
                     }else {
                         board = board.concat(j + "   ");
                     }
                 }else {
-                    board = board.concat(this.board[i-ONE][j] + " | ");
+                    board = board.concat(this.board[i - ONE][j] + " | ");
                 }
             }
             board = board.concat("\n  +---");
@@ -89,7 +89,7 @@ public class Grid {
         String board = "";
         for(int i = 0; i < this.board.length + ONE; i++){
             if(i != ZERO) {
-                board = board.concat((i - 1) + " | ");
+                board = board.concat((i - ONE) + " | ");
             }
             for(int j = 0; j < this.board.length; j++){
                 if(i == ZERO){
@@ -99,8 +99,8 @@ public class Grid {
                         board = board.concat(j + "   ");
                     }
                 }else {
-                    if(this.board[i-1][j].equals("@") ||
-                            this.board[i-1][j].equals("X")) {
+                    if(this.board[i - ONE][j].equals("@") ||
+                            this.board[i - ONE][j].equals("X")) {
                         board = board.concat(this.board[i - ONE][j] + " | ");
                     }else{
                         board = board.concat(" " + " | ");
