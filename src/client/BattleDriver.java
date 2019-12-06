@@ -58,7 +58,6 @@ public class BattleDriver {
         } catch (IOException e) {
             System.out.println(e.toString());
         }
-
         System.exit(SUCCESS);
     } // end main method
 

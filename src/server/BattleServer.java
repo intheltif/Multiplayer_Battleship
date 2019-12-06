@@ -24,6 +24,21 @@ public class BattleServer implements MessageListener {
     /** Allows us to reset the game */
     private static final int FIRST_INDEX = 0;
 
+    /** A Constant representation of one */
+    private static final int ONE = 1;
+
+    /** A Constant representation of two */
+    private static final int TWO = 2;
+
+    /** A Constant representation of zero */
+    private static final int ZERO = 0;
+
+    /** A Constant representation of three */
+    private static final int THREE = 3;
+
+    /** A Constant representation of negative one */
+    private static final int NEGONE = -1;
+
     /** The welcoming socket that clients connect through */
     private ServerSocket serverSocket;
 
@@ -47,6 +62,8 @@ public class BattleServer implements MessageListener {
 
     /** The size of the Grid */
     private int size;
+
+
 
     /**
      * This is the constructor for the BattleServer, it ask for a port
@@ -169,11 +186,11 @@ public class BattleServer implements MessageListener {
     private void parseJoin(String command, ConnectionAgent agent){
         String user;
         String[] com = command.trim().split("\\s+");
-        if(com.length == 2) {
-            this.connectionAgentToUserMap.put(agent, com[1]);
-            this.userToConnectionAgentMap.put(com[1], agent);
+        if(com.length == TWO) {
+            this.connectionAgentToUserMap.put(agent, com[ONE]);
+            this.userToConnectionAgentMap.put(com[ONE], agent);
             user = this.connectionAgentToUserMap.get(agent);
-            this.game.join(com[1],size);
+            this.game.join(com[ONE],size);
             System.out.println("SERVER: " + user + " JOINED THE GAME");
             broadcast("!!! " + user + " has joined");
         }
@@ -187,8 +204,8 @@ public class BattleServer implements MessageListener {
      */
     private void parseCommands(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
-        if(com.length > 0){
-            switch (com[0]){
+        if(com.length > ZERO){
+            switch (com[ZERO]){
                 case"/join":
                     parseJoin(command,agent);
                     break;
@@ -226,9 +243,9 @@ public class BattleServer implements MessageListener {
      */
     private void parsePlay(ConnectionAgent agent){
         String user;
-        if(this.conAgentCollection.size() >=2 && !started){
+        if(this.conAgentCollection.size() >= TWO && !started){
             user = this.connectionAgentToUserMap.get(agent);
-            String player = game.getPlayers().get(0);
+            String player = game.getPlayers().get(ZERO);
             started = true;
             broadcast("The game begins");
             broadcast(player + " it is you turn");
@@ -251,8 +268,8 @@ public class BattleServer implements MessageListener {
     private void parseAttack(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
         String turn = this.game.turn(this.current);
-        int col = -1;
-        int row = -1;
+        int col = NEGONE;
+        int row = NEGONE;
         int attAgr = 4;
         String curr = this.connectionAgentToUserMap.get(agent);
         boolean attacked;
@@ -261,20 +278,20 @@ public class BattleServer implements MessageListener {
             System.out.println("MOVED FAILED IN USER: " + curr);
         }else {
             try {
-                col = Integer.parseInt(com[2]);
-                row = Integer.parseInt(com[3]);
+                col = Integer.parseInt(com[TWO]);
+                row = Integer.parseInt(com[THREE]);
             } catch (NumberFormatException nfe) {
                 System.out.println("Attack coordinates must be integers.");
             } catch (ArrayIndexOutOfBoundsException aioobe) {
                 System.out.println("Usage: /attack <player> <col> <row>");
             }
-            if (col > (this.size - 1) || row > (this.size - 1) ||
-                    col < 0 || row < 0) {
+            if (col > (this.size - ONE) || row > (this.size - ONE) ||
+                    col < ZERO || row < ZERO) {
                 System.out.println("Usage: /attack <player> <col> <row>");
             }
             if (com.length == attAgr) {
-                if (!turn.equals(com[1])) {
-                    if(this.game.getPlayers().contains(com[1])) {
+                if (!turn.equals(com[ONE])) {
+                    if(this.game.getPlayers().contains(com[ONE])) {
                         attacked = attack(game, com);
                         if (!attacked) {
                             System.out.println("MOVED FAILED IN USER: " + curr);
@@ -282,7 +299,7 @@ public class BattleServer implements MessageListener {
                                     "turn: " + turn);
                         } else {
                             System.out.println("Shots Fired at " +
-                                    com[1] + " by " + curr);
+                                    com[ONE] + " by " + curr);
                             this.current++;
                             String over = game.isGameOver();
                             if (!over.equals("")) {
@@ -315,7 +332,7 @@ public class BattleServer implements MessageListener {
      * @param agent The current connection agent.
      */
     private void parseShow(String command, ConnectionAgent agent){
-        int showArgs = 2;
+        int showArgs = TWO;
         String[] com = command.trim().split("\\s+");
         String board;
         String curr = this.connectionAgentToUserMap.get(agent);
@@ -382,9 +399,9 @@ public class BattleServer implements MessageListener {
      * @return If the attack was complete.
      */
     private boolean attack(Game game, String[] command){
-        int row = Integer.parseInt(command[3]);
-        int column = Integer.parseInt(command[2]);
-        String nickname  = command[1];
+        int row = Integer.parseInt(command[THREE]);
+        int column = Integer.parseInt(command[TWO]);
+        String nickname  = command[ONE];
         return game.hit(nickname, row, column);
     }
 } // end BattleServer class

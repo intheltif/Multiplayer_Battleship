@@ -12,6 +12,12 @@ public class Grid {
     /** The default size of a grid */
     private static final int DEFAULT = 10;
 
+    /** A Constant representation of zero */
+    private static final int ZERO = 0;
+
+    /** A Constant representation of one */
+    private static final int ONE = 1;
+
     /** A 2D array that represent the grid */
     private String[][] board;
 
@@ -52,9 +58,9 @@ public class Grid {
      */
     public String printGrid(){
         String board = "";
-        for(int i = 0; i < this.board.length + 1; i++){
+        for(int i = 0; i < this.board.length + ONE; i++){
             if(i != 0) {
-                board = board.concat((i - 1) + " | ");
+                board = board.concat((i - ONE) + " | ");
             }
             for(int j = 0; j < this.board.length; j++){
                 if(i == 0){
@@ -64,7 +70,7 @@ public class Grid {
                         board = board.concat(j + "   ");
                     }
                 }else {
-                    board = board.concat(this.board[i-1][j] + " | ");
+                    board = board.concat(this.board[i-ONE][j] + " | ");
                 }
             }
             board = board.concat("\n  +---");
@@ -81,13 +87,13 @@ public class Grid {
      */
     public String printPartialGrid() {
         String board = "";
-        for(int i = 0; i < this.board.length + 1; i++){
-            if(i != 0) {
+        for(int i = 0; i < this.board.length + ONE; i++){
+            if(i != ZERO) {
                 board = board.concat((i - 1) + " | ");
             }
             for(int j = 0; j < this.board.length; j++){
-                if(i == 0){
-                    if(j == 0){
+                if(i == ZERO){
+                    if(j == ZERO){
                         board = board.concat("    " + j + "   ");
                     }else {
                         board = board.concat(j + "   ");
@@ -95,7 +101,7 @@ public class Grid {
                 }else {
                     if(this.board[i-1][j].equals("@") ||
                             this.board[i-1][j].equals("X")) {
-                        board = board.concat(this.board[i - 1][j] + " | ");
+                        board = board.concat(this.board[i - ONE][j] + " | ");
                     }else{
                         board = board.concat(" " + " | ");
                     }
@@ -129,5 +135,4 @@ public class Grid {
         grid.setUpBoard();
         grid.printPartialGrid();
     }
-
 } // end Grid class
