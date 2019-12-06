@@ -123,7 +123,7 @@ public class BattleServer implements MessageListener {
      *
      * @param message The message being sent.
      */
-    public void broadcast(String message) {
+    private void broadcast(String message) {
         // Send message to all CAs currently connected.
         for(ConnectionAgent agent : conAgentCollection) {
             if(agent.isConnected()) {
