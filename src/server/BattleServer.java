@@ -16,7 +16,7 @@ import java.util.HashMap;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.0 (08 December 2019)
  *
  */
 public class BattleServer implements MessageListener {
@@ -37,7 +37,7 @@ public class BattleServer implements MessageListener {
     private static final int THREE = 3;
 
     /** A Constant representation of negative one */
-    private static final int NEGONE = -1;
+    private static final int NEG_ONE = -1;
 
     /** The welcoming socket that clients connect through */
     private ServerSocket serverSocket;
@@ -80,7 +80,6 @@ public class BattleServer implements MessageListener {
             this.started = false;
         } catch (IOException ioe) {
             System.err.println("IO Error: " + ioe.getMessage());
-            //TODO Maybe handle a bit better
         }
     } // end BattleServer constructor
 
@@ -280,8 +279,8 @@ public class BattleServer implements MessageListener {
             this.current = ZERO;
         }
         String turn = this.game.turn(this.current);
-        int col = NEGONE;
-        int row = NEGONE;
+        int col = NEG_ONE;
+        int row = NEG_ONE;
         int attAgr = 4;
         String curr = this.connectionAgentToUserMap.get(agent);
         boolean attacked;

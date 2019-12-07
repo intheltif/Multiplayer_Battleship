@@ -9,7 +9,7 @@ import java.util.Random;
  *
  * @author Evert Ball 
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.1 (08 December 2019)
  */
 public class Game {
     /** The string for a Hit */
@@ -28,7 +28,7 @@ public class Game {
     private static final int TWO = 2;
 
     /** A Constant representation of negative one */
-    private static final int NEGONE = -1;
+    private static final int NEG_ONE = -1;
 
     /** A Constant representation of ten */
     private static final int TEN = 10;
@@ -57,10 +57,10 @@ public class Game {
     /** The number of ships each player gets */
     private int totalShips;
 
-    /** A HashMap */
+    /** A mapping of players to their boards */
     private HashMap<String, Grid> playerMap;
 
-    /** ArrayList of the games players */
+    /** ArrayList of the players in a game */
     private ArrayList<String> players;
 
     /**
@@ -121,7 +121,6 @@ public class Game {
     
     /**
      * Returns the number of players currently playing
-     * TODO Still have to handle clients dropping unexpectedly (ie CTRL+C)
      * @return The number of players in a game.
      */
     private int getNumPlayers() {
@@ -259,18 +258,17 @@ public class Game {
     private boolean shipDestroyed(String player) {
         boolean over = true;
         String[][] board = getGrid(player).getBoard();
-        for(int i = 0; i < board.length; i++){
-            for (int j = 0; j < board[i].length; j++) {
-                String value = board[i][j];
-                if(value.equals(Ship.BATTLESHIP.getShip())){
+        for (String[] strings : board) {
+            for (String value : strings) {
+                if (value.equals(Ship.BATTLESHIP.getShip())) {
                     over = false;
-                }else if (value.equals(Ship.CARRIER.getShip())){
+                } else if (value.equals(Ship.CARRIER.getShip())) {
                     over = false;
-                }else if (value.equals(Ship.CRUISER.getShip())){
+                } else if (value.equals(Ship.CRUISER.getShip())) {
                     over = false;
-                }else if (value.equals(Ship.DESTROYER.getShip())){
+                } else if (value.equals(Ship.DESTROYER.getShip())) {
                     over = false;
-                }else if (value.equals(Ship.SUBMARINE.getShip())){
+                } else if (value.equals(Ship.SUBMARINE.getShip())) {
                     over = false;
                 }
             }
@@ -380,7 +378,7 @@ public class Game {
         Random r = new Random();
         ArrayList<Integer> place = new ArrayList<>();
         int oldRow, oldCol, way, row, col;
-        oldRow = oldCol = way = row = col = NEGONE;
+        oldRow = oldCol = way = row = col = NEG_ONE;
         int direction = r.nextInt(TWO);
         for(int j = 0; j < ship.getSize(); j++) {
             if (j == ZERO) {
@@ -428,7 +426,7 @@ public class Game {
             if(row >= board.length || col >= board.length || row < ZERO
                     || col < ZERO || !(board[row][col].equals(" "))){
                 clearShip(nickname,place);
-                j = NEGONE;
+                j = NEG_ONE;
                 row = r.nextInt(board.length);
                 col = r.nextInt(board.length);
                 oldCol = col;

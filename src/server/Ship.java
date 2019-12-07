@@ -1,12 +1,12 @@
 package server;
 
 /**
- * Enum of a ship that represents the ships charater on the board and the size
- * of the ship.
+ * Enumeration of a ship that represents the ships character on the board and
+ * the size of the ship.
  *
  * @author Carlee Yancey
  * @author Evert Ball
- * @version 1 ( November 18, 2019)
+ * @version 1.0.0 (18 November 2019)
  */
 public enum Ship {
     CARRIER("C", 5),

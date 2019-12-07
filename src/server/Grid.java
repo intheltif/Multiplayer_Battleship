@@ -5,7 +5,7 @@ package server;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.0.1 (18 November 2019)
  */
 public class Grid {
 
@@ -21,18 +21,6 @@ public class Grid {
     /** A 2D array that represent the grid */
     private String[][] board;
 
-    /** The size of the grid */
-    private int size;
-
-    /**
-     * This constructs a grid based on the default size.
-     */
-    public Grid(){
-        this.board = new String[DEFAULT][DEFAULT];
-        this.size = DEFAULT;
-        this.setUpBoard();
-    }
-
     /**
      * This constructs a grid bases on a size that is given.
      *
@@ -40,7 +28,6 @@ public class Grid {
      */
     public Grid(int size){
         this.board = new String[size][size];
-        this.size = size;
         this.setUpBoard();
     }
 
@@ -55,6 +42,8 @@ public class Grid {
 
     /**
      * This prints the current state of the grid.
+     *
+     * @return A String representation of a board.
      */
     public String printGrid(){
         String board = "";
@@ -84,6 +73,8 @@ public class Grid {
 
     /**
      * Prints the grid with only hits and misses.
+     *
+     * @return A String representing a board with only hits and misses displayed.
      */
     public String printPartialGrid() {
         String board = "";

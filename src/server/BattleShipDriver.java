@@ -6,7 +6,7 @@ package server;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.1 (08 December 2019)
  */
 public class BattleShipDriver {
 
@@ -19,11 +19,18 @@ public class BattleShipDriver {
     /** The valid number of command line args */
     private static final int NUM_ARGS = 2;
     
-    private static final int DEFAULTSIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     
     /** Usage message to print when program is used incorrectly */
     private static final String USAGE_MSG = ("Usage is: java " +
             "BattleShipDriver <port> <board_size>)");
+
+    /** Constant for invalid type message used to notify user of invalid args */
+    private static final String INVALID_TYPE_MSG = "Invalid argument type. " +
+            "Arguments must be of type integer.";
+
+    /** Constant for no port given message */
+    private static final String PORT_MSG = "The port was not initialized...";
 
     
     /**
@@ -50,16 +57,15 @@ public class BattleShipDriver {
             if(args.length == NUM_ARGS) {
                 size = Integer.parseInt(args[1]);
             }else{
-                size = DEFAULTSIZE;
+                size = DEFAULT_SIZE;
             }
         } catch(NumberFormatException nfe) {
-            System.err.println("Invalid argument type. Arguments must be of" +
-                                   "integers.");
+            System.err.println(INVALID_TYPE_MSG);
             System.exit(FAILURE);
         }
         // Creates a BattleServer and starts it listening for connections
         if(port == -1 ) {
-            System.out.println("The port was not initialized...");
+            System.out.println(PORT_MSG);
             System.exit(FAILURE);
         }
         BattleServer bs = new BattleServer(port);
