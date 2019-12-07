@@ -17,23 +17,23 @@ import java.net.Socket;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.0 (08 December 2019)
  */
 public class BattleClient extends MessageSource implements MessageListener {
 
-    /** The name of the host */
+    /** The domain of the host to connect to */
     private InetAddress hostname;
 
-    /** Port number */
+    /** The port number to communicate with the host on */
     private int port;
 
-    /** Username of the Battle Client */
+    /** Username of the player */
     private String username;
 
-    /** The ConnectionAgent of the BattleClient */
+    /** The <code>ConnectionAgent</code> that allows host communication */
     private ConnectionAgent agent;
 
-    /** The print Stream listener */
+    /** The MessageListener that allows the server to communicate with us */
     private PrintStreamMessageListener print;
 
     /**
@@ -49,17 +49,24 @@ public class BattleClient extends MessageSource implements MessageListener {
         this.port = port;
         this.username = username;
         this.hostname =  InetAddress.getByName(hostname);
+
+        // Allows communication with a remote host
         Socket socket = new Socket(this.getHostname(), this.port);
         this.agent = new ConnectionAgent(socket);
+
+        // Allows message passing concurrently
         Thread thread = new Thread(this.agent);
         thread.start();
+
+        // Allows this user to receive messages when a new one is available
         agent.addMessageListener(this);
+
         this.print = new PrintStreamMessageListener(agent.getOut());
         this.connect();
     } // end constructor
 
     /**
-     * This method gets the hostname of the BattleClient.
+     * Gets the hostname that this client is connected to.
      *
      * @return The name of the host.
      */
@@ -68,7 +75,7 @@ public class BattleClient extends MessageSource implements MessageListener {
     }
 
     /**
-     * This method gets the username of the BattleClient
+     * Gets this player's username.
      *
      * @return The username.
      */
@@ -77,8 +84,8 @@ public class BattleClient extends MessageSource implements MessageListener {
     }
 
     /**
-     * This connects the battleClient using its connection agent to the
-     * battleship game.
+     * Joins this player to a game of BattleShip while the game is not in
+     * progress.
      */
     private void connect(){
         String join = "/join ";
@@ -87,7 +94,7 @@ public class BattleClient extends MessageSource implements MessageListener {
     } //end connect
 
     /**
-     * This method gets the connection agent of the BattleClient.
+     * Gets the connection agent of the BattleClient.
      *
      * @return The connection agent.
      */
@@ -119,10 +126,12 @@ public class BattleClient extends MessageSource implements MessageListener {
     } //end sourceClosed
 
     /**
-     * This method sends the message using its connection agent.
+     * Sends a message to a remote host using this clients
+     * <code>ConnectionAgent</code>
      * @param message The message that is being sent.
      */
     public void send(String message){
         agent.sendMessage(message);
     } //end send
+
 } // end BattleClient class

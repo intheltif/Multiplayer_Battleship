@@ -12,7 +12,7 @@ import java.io.PrintStream;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.0 (08 December 2019)
  */
 public class PrintStreamMessageListener implements MessageListener {
     

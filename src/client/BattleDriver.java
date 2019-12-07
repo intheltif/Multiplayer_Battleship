@@ -12,7 +12,7 @@ import java.util.Scanner;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.0 (08 December 2019)
  */
 public class BattleDriver {
     
@@ -22,11 +22,17 @@ public class BattleDriver {
     /** A named constant for a successful exit */
     private static final int SUCCESS = 1;
 
+    /** Constant for a usage message */
+    private static final String USAGE = "Usage is: java BattleDriver " +
+            "<hostname> <port> <nickname>";
+
+    private static final String QUIT_COMMAND = "/quit";
+
     /**
-     * The main entry point into our program. Reads input from the user and 
+     * The main entry point into our program. Reads input from the user and
      * sends the required information to the server.
      *
-     * @param args The 3 command line arguments required for the program to 
+     * @param args The 3 command line arguments required for the program to
      *             start. The required arguments, in order, are as follows:
      *             hostname, port number, and user nickname.
      */
@@ -34,9 +40,9 @@ public class BattleDriver {
         String hostname;
         int port;
         String username;
+
         if(args.length < 3) {
-            System.out.println("Usage is: java BattleDriver <hostname> <port>" +
-                    " <nickname>");
+            System.out.println(USAGE);
             System.exit(FAILURE);
         }
         hostname = args[0];
@@ -50,11 +56,11 @@ public class BattleDriver {
                 if(action.hasNextLine()){
                     String toDo = action.nextLine();
                     client.send(toDo);
-                    if(toDo.trim().equals("/quit")) {
+                    if(toDo.trim().equals(QUIT_COMMAND)) {
                         System.exit(SUCCESS);
-                    }
-                }
-            }
+                    } // end inner if
+                } // end outter if
+            } // end while loop
         } catch (IOException e) {
             System.out.println(e.toString());
         }
