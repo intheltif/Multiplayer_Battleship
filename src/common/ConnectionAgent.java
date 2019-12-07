@@ -12,7 +12,7 @@ import java.util.Scanner;
  *
  * @author Evert Ball
  * @author Carlee Yancey
- * @version 18 November 2019
+ * @version 1.2.0 (08 December 2019)
  */
 public class ConnectionAgent extends MessageSource implements Runnable {
 
@@ -29,7 +29,10 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     private Thread thread;
 
     /**
-     * This is a constructor for a <code>ConnectionAgent</code>.
+     * Create a new <code>ConnectionAgent</code> based on a given socket.
+     * Uses the socket's input and output streams to decide where messages
+     * should be passed. Allows this class to act as a messenger between
+     * hosts in a network.
      *
      * @param socket Socket to connect to a separate host through.
      */
@@ -81,6 +84,8 @@ public class ConnectionAgent extends MessageSource implements Runnable {
     /**
      * Run method that reads input while the socket is connected so that hosts
      * can communicate through the socket.
+     *
+     * Required method for concurrent message passing between hosts.
      */
     @Override
     public void run() {
@@ -108,8 +113,6 @@ public class ConnectionAgent extends MessageSource implements Runnable {
         } catch(NoSuchElementException nsee) {
             this.sendMessage("/quit");
             this.close();
-            //System.out.println(this.isConnected());
-            // Do nothing. Fixing error in server.
         } // end try-catch
     } // end run method
 
