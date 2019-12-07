@@ -51,11 +51,11 @@ Ship.java
 
 **Commands for Clients:**
 ```bash
-/play
-/show <username>
-/attack <username> <[0-9]+> <[0-9]+> **
-/quit
-/help
+/play   - Starts a game of battleship
+/show <username> - Allows players to see the boards of themselves and others
+/attack <username> <[0-9]+> <[0-9]+> ** - Attacks another player at coordinates.
+/quit - Quits the player from a game, whether in progress or not.
+/help - To see the list of commands available.
 ```
     
 ###### ** The range of for attack is based off the board size that you use.
@@ -73,7 +73,7 @@ Ship.java
 * Will display who's current turn during the game.
 ```
 
-## Implantation Reasoning 
+## Implementation Change Reasoning 
 **PrintMessageListener**
 * The way we interpreted PrintMessageListener is that when a BattleClient 
 receives a message the PrintMessageListener is called and the message is printed 
@@ -83,7 +83,7 @@ in messageReceived to the console.
 * Broadcast in BattleServer is only used in battleSever, thus there is no 
 need for any other class to have access to the broadcast method.
  
-* Close in the Connection agent
+* Close in the ConnectionAgent for same reason as above.
 
 * Connect in BattleClient, the only place that a BattleClient should call 
 connect is in the constructor of BattleClient. 
@@ -94,7 +94,11 @@ connect is in the constructor of BattleClient.
 
 * There are currently no known issues.
   
-**_Release as of 12/6/2019_**
+**_Release as of 12/06/2019_**
+    
+* When all clients disconnect, an Exception is thrown server side
+and then the server just hangs.
+
+**_Release as of 12/07/2019_**
     
 * There are currently no known issues.
-    
