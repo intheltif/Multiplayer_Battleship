@@ -6,10 +6,10 @@
 ## Description
 
 A client-server implementation of a game of Battleship.
-Allows players to join, play, and disconnect from a command line version of a
-game of Battleship. Players can see their boards along with the placement of
-their ships. Players can also see their opponents boards with Hits and Misses
-but not the location of the opponents ships.
+Allows players to join, play, and disconnect from a command line version 
+of a game of Battleship. Players can see their boards along with the 
+placement of their ships. Players can also see their opponents boards 
+with Hits and Misses but not the location of the opponents ships.
 
 ## Files Used
 **Client:**

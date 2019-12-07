@@ -264,7 +264,7 @@ public class BattleServer implements MessageListener {
             agent.sendMessage("Not enough players to play the " +
                     "game");
         }else{
-            agent.sendMessage("Game has been Started");
+            agent.sendMessage("Game already in progress");
         }
     } // end parsePlay method
 
@@ -286,7 +286,7 @@ public class BattleServer implements MessageListener {
         String curr = this.connectionAgentToUserMap.get(agent);
         boolean attacked;
         if(!curr.equals(turn)){
-            broadcast("Move Failed, player turn: " + turn);
+            agent.sendMessage("Move Failed, player turn: " + turn);
             System.out.println("MOVED FAILED IN USER: " + curr);
         }else {
             try {
@@ -310,7 +310,10 @@ public class BattleServer implements MessageListener {
                             agent.sendMessage("Move Failed, player " +
                                     "turn: " + turn);
                         } else {
-                            System.out.println("Shots Fired at " +
+                            // Broadcasts to all clients and logs to server
+                            System.out.println("Shots fired at " +
+                                    com[ONE] + " by " + curr);
+                            broadcast("Shots fired at " +
                                     com[ONE] + " by " + curr);
                             this.current++;
                             String over = game.isGameOver();

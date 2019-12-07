@@ -359,7 +359,14 @@ public class Game {
      * @return Who's turn of the game.
      */
     public String turn(int turns){
-        return this.players.get(turns++);
+        String player = null;
+        try {
+            player = this.players.get(turns++);
+        } catch(IndexOutOfBoundsException ioobe) {
+            System.out.println("All players have quit.");
+            System.exit(ZERO); // Successfully exit since all players quit
+        }
+        return player;
     }
 
     /**
