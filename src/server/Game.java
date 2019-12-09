@@ -233,6 +233,7 @@ public class Game {
                     loser = this.players.get(i);
                     leave(loser);
                     System.out.println(loser + " REMOVED FROM THE GAME");
+                    winner = "remove " + loser;
                 }
             }
         }
@@ -359,10 +360,10 @@ public class Game {
     public String turn(int turns){
         String player = null;
         try {
-            player = this.players.get(turns++);
+            player = this.players.get(turns);
         } catch(IndexOutOfBoundsException ioobe) {
-            System.out.println("All players have quit.");
-            System.exit(ZERO); // Successfully exit since all players quit
+            System.out.println(">>>>>>>>>>> Darn it. <<<<<<<<<<<<<");
+            player = this.players.get(turns - 1);
         }
         return player;
     }

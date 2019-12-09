@@ -2,7 +2,7 @@ package server;
 
 import common.*;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +20,9 @@ import java.util.HashMap;
  *
  */
 public class BattleServer implements MessageListener {
+
+    /** Constant representation of a successful exit */
+    private static final int SUCCESS = 0;
 
     /** Allows us to reset the game */
     private static final int FIRST_INDEX = 0;
@@ -98,6 +101,10 @@ public class BattleServer implements MessageListener {
         this.game = new Game(this.size);
         while (!this.serverSocket.isClosed()) {
             try {
+                /*
+                Checks if game has started twice to fix issue where 1 more
+                player can join after play has started.
+                */
                 if(!started) {
                     ConnectionAgent agent =
                             new ConnectionAgent(this.serverSocket.accept());
@@ -109,7 +116,9 @@ public class BattleServer implements MessageListener {
                             conAgentCollection.add(agent);
                         }
                     }else{
-                        agent.sendMessage("Game In Progress, Unable to join");
+                        agent.sendMessage("Game In Progress, Unable to join.");
+                        // Forces client to quit if joining a game in progress
+                        agent.sendMessage("quit");
                     }
                 }
             } catch (IOException ioe) {
@@ -177,30 +186,50 @@ public class BattleServer implements MessageListener {
     } // end sourceClosed method
 
     /**
-     * This method parses the command that starts with "/join" and joins a game
-     * that has not been started. Also maps the user to the correct connection
-     * agent
-     * @param command The command that has been given.
-     * @param agent The connection agent.
+     * Parses the join command sent by a client upon initial connection.
+     * Joins the client to a a game that has not been started and maps the user
+     * to the correct <code>ConnectionAgent</code>.
+     *
+     * @param command The join command sent by the client
+     * @param agent The connection agent associated with the connecting client.
      */
     private void parseJoin(String command, ConnectionAgent agent){
         String user;
         String[] com = command.trim().split("\\s+");
-        if(com.length == TWO) {
-            this.connectionAgentToUserMap.put(agent, com[ONE]);
-            this.userToConnectionAgentMap.put(com[ONE], agent);
-            user = this.connectionAgentToUserMap.get(agent);
-            this.game.join(com[ONE],size);
-            System.out.println("SERVER: " + user + " JOINED THE GAME");
-            broadcast("!!! " + user + " has joined");
-        }
+        boolean hasJoined = this.connectionAgentToUserMap.containsKey(agent);
+        boolean isNameTaken = this.userToConnectionAgentMap.containsKey(com[ONE]);
+        // Do not allow another player to join if a game is in progress
+        if(!started) {
+            if (com.length == TWO) {
+                if(!hasJoined) {
+                    if(!isNameTaken){
+                        this.connectionAgentToUserMap.put(agent, com[ONE]);
+                        this.userToConnectionAgentMap.put(com[ONE], agent);
+                        user = this.connectionAgentToUserMap.get(agent);
+                        this.game.join(com[ONE], size);
+                        System.out.println("SERVER: " + user + " JOINED THE GAME.");
+                        broadcast("!!! " + user + " has joined.");
+                    } else {
+                        this.conAgentCollection.remove(agent);
+                        agent.sendMessage("Name already in use. Try again.");
+                        // Cause the client's system to quit so they can rejoin
+                        agent.sendMessage("disconnect");
+                    } // end isNameTaken if statement
+                } else {
+                    agent.sendMessage("Cannot join a game you're already in.");
+                } // end hasJoined if statement
+            }
+        } else {
+            agent.sendMessage("Cannot join a game that is already in progress.");
+        } // end if statement that checks if game is in progress.
     } // end parseJoin method
 
     /**
-     * This method parses a command from a curtain Connection Agent.
+     * Parses commands sent by sent by clients through their
+     * <code>ConnectionAgents</code>.
      *
-     * @param command The command.
-     * @param agent The connection agent.
+     * @param command The command sent by the client.
+     * @param agent The <code>ConnectionAgent</code> that passed the message.
      */
     private void parseCommands(String command, ConnectionAgent agent){
         String[] com = command.trim().split("\\s+");
@@ -216,14 +245,14 @@ public class BattleServer implements MessageListener {
                     if(started){
                         parseAttack(command,agent);
                     }else{
-                        agent.sendMessage("Play not in progress");
+                        agent.sendMessage("Play not in progress.");
                     }
                     break;
                 case"/show" :
                     if(started){
                         parseShow(command,agent);
                     }else{
-                        agent.sendMessage("Play not in progress");
+                        agent.sendMessage("Play not in progress.");
                     }
                     break;
                 case "/quit":
@@ -232,12 +261,17 @@ public class BattleServer implements MessageListener {
                 case "/help":
                     parseHelp(agent);
                     break;
-            }
-        }
+                default:
+                    agent.sendMessage("Unable to parse command. Use " +
+                            "\"/help\" to see a list of commands.");
+            } // end switch statement
+        } // end if statement
     } // end parseCommands method
 
     /**
-     * This parses the command for a play command.
+     * Parses the "play" command for valid input. Confirms that 2+ players are
+     * currently connected and invalidates the input if the game is already
+     * in progress.
      *
      * @param agent The current connection agent.
      */
@@ -245,30 +279,32 @@ public class BattleServer implements MessageListener {
         String user;
         ArrayList<ConnectionAgent> closed = new ArrayList<>();
         if(this.conAgentCollection.size() >= TWO && !started){
-            for (ConnectionAgent check : this.conAgentCollection) {
-                if(check.getSocket().isClosed()){
-                    closed.add(check);
+            for (ConnectionAgent agentToCheck : this.conAgentCollection) {
+                if(agentToCheck.getSocket().isClosed()){
+                    closed.add(agentToCheck);
                 }
             }
-            removeCA(closed);
+            removeConnectionAgents(closed);
             user = this.connectionAgentToUserMap.get(agent);
             String player = game.getPlayers().get(ZERO);
             started = true;
-            broadcast("The game begins");
-            broadcast(player + " it is you turn");
+            broadcast("The game begins...");
+            broadcast(player + " it is your turn.");
             System.out.println("PARSE COMMANDS: " + user +
-                    " STARTED THE GAME");
+                    " STARTED THE GAME.");
 
         }else if (!started){
             agent.sendMessage("Not enough players to play the " +
-                    "game");
+                    "game.");
         }else{
-            agent.sendMessage("Game already in progress");
+            agent.sendMessage("Game already in progress.");
         }
     } // end parsePlay method
 
     /**
-     * This parses the command for a show command.
+     * Parses the attack command sent by a client through their
+     * <code>ConnectionAgent</code>. On a failed command, logs to the server
+     * and sends a failure message to the client.
      *
      * @param command The given command.
      * @param agent The current connection agent.
@@ -285,7 +321,7 @@ public class BattleServer implements MessageListener {
         String curr = this.connectionAgentToUserMap.get(agent);
         boolean attacked;
         if(!curr.equals(turn)){
-            agent.sendMessage("Move Failed, player turn: " + turn);
+            agent.sendMessage("Move failed. It is " + turn + "'s turn.");
             System.out.println("MOVED FAILED IN USER: " + curr);
         }else {
             try {
@@ -293,8 +329,10 @@ public class BattleServer implements MessageListener {
                 row = Integer.parseInt(com[THREE]);
             } catch (NumberFormatException nfe) {
                 System.out.println("Attack coordinates must be integers.");
+                agent.sendMessage("Attack coordinates must be integers.");
             } catch (ArrayIndexOutOfBoundsException aioobe) {
                 System.out.println("Usage: /attack <player> <col> <row>");
+                agent.sendMessage("Attack coordinates must be on the board.");
             }
             if (col > (this.size - ONE) || row > (this.size - ONE) ||
                     col < ZERO || row < ZERO) {
@@ -303,7 +341,7 @@ public class BattleServer implements MessageListener {
             if (com.length == attAgr) {
                 if (!turn.equals(com[ONE])) {
                     if(this.game.getPlayers().contains(com[ONE])) {
-                        attacked = attack(game, com);
+                        attacked = isValidAttack(game, com);
                         if (!attacked) {
                             System.out.println("MOVED FAILED IN USER: " + curr);
                             agent.sendMessage("Move Failed, player " +
@@ -317,17 +355,36 @@ public class BattleServer implements MessageListener {
                             this.current++;
                             String over = game.isGameOver();
                             if (!over.equals("")) {
-                                this.current = FIRST_INDEX;
-                                System.out.println("GAME OVER: " + over +
-                                        " WINS!");
-                                broadcast("GAME OVER: " + over + " WINS!");
-                                started = false;
+                                String[] overArray = over.trim().split("\\s+");
+                                if(overArray[ZERO].equals("remove")) {
+                                    String user = overArray[ONE];
+                                    broadcast("*** All of " + user +
+                                            "'s battleships have been sunk. ***");
+                                    ConnectionAgent ca = this.userToConnectionAgentMap.get(user);
+                                    this.conAgentCollection.remove(ca);
+                                    this.connectionAgentToUserMap.remove(ca);
+                                    this.userToConnectionAgentMap.remove(user);
+                                    if(this.current > (conAgentCollection.size() - 1)) {
+                                        this.current = 0;
+                                    }
+                                    ca.sendMessage("disconnect");
+                                } else {
+                                    this.current = FIRST_INDEX;
+                                    System.out.println("GAME OVER: " + over +
+                                            " WINS!");
+                                    broadcast("GAME OVER: " + over + " WINS!");
+                                    started = false;
+                                    // If game is over, force all players to quit.
+                                    broadcast("disconnect");
+                                    // Quit accepting players since game was won.
+                                    System.exit(SUCCESS);
+                                }
                             }
                         }
                     }
                 }
             } else {
-                agent.sendMessage("Invalid command: " + command);
+                agent.sendMessage("Usage: /attack <player> <col> <row>");
                 System.out.println("Invalid command: " + command + "from " +
                         curr);
             }
@@ -343,7 +400,9 @@ public class BattleServer implements MessageListener {
     } // end parseAttack method
 
     /**
-     * This parses the command for a show command.
+     * Sends the board of the requested player to the client that requested
+     * the specified board. If the requested player is the client it shows the
+     * ships on the board, otherwise it only shows hits and misses.
      *
      * @param command The given command.
      * @param agent The current connection agent.
@@ -361,7 +420,9 @@ public class BattleServer implements MessageListener {
     }
 
     /**
-     * Parses the command for quitting from a game of Battleship.
+     * Parses the command for quitting from a game of Battleship. Determines if
+     * this player quitting causes the number of players to be 1 and if so,
+     * displays that the remaining player is the winner.
      *
      * @param command The command that was issued from the client.
      * @param agent The <code>ConnectionAgent</code> that sent the command.
@@ -373,7 +434,7 @@ public class BattleServer implements MessageListener {
         String user = this.connectionAgentToUserMap.get(agent);
         System.out.println("PARSE COMMANDS: " + command +
                 " USER: " + user);
-        broadcast("!!! " + user + " surrendered");
+        broadcast("!!! " + user + " surrendered.");
         sourceClosed(agent);
         game.leave(user);
         String over = game.isGameOver();
@@ -383,18 +444,22 @@ public class BattleServer implements MessageListener {
                     " WINS!");
             broadcast("GAME OVER: " + over + " WINS!");
             started = false;
+            // If the game is over, force all clients to quit.
+            broadcast("disconnect");
+            System.exit(SUCCESS);
         } else {
             String turn = game.turn(this.current);
-            System.out.println(turn + " it is yoru turn");
+            System.out.println(turn + " it is your turn");
             broadcast(turn + " it is your turn");
         }
     } // end parseQuit method
 
     /**
-     * Parses the command for showing all of the available commands clients can
-     * send.
+     * Sends a usage message that displays available commands for a game of
+     * Battleship to the player that requested it.
      *
-     * @param agent The <code>ConnectionAgent</code> that sent the command.
+     * @param agent The <code>ConnectionAgent</code> of the client that sent
+     *              the command.
      */
     private void parseHelp(ConnectionAgent agent) {
         StringBuilder builtStr = new StringBuilder();
@@ -415,22 +480,31 @@ public class BattleServer implements MessageListener {
     } // end parseHelp method
 
     /**
-     * This calls the hit method from game to try to attack the grid.
+     * Determines whether an attack was valid based on the current game in
+     * progress and the command that the user entered.
      *
      * @param game The current game.
-     * @param command Information that way entered.
-     * @return If the attack was complete.
+     * @param command The attack command that was sent by a client.
+     * @return True if the attack was valid, false otherwise.
      */
-    private boolean attack(Game game, String[] command){
+    private boolean isValidAttack(Game game, String[] command){
         int row = Integer.parseInt(command[THREE]);
         int column = Integer.parseInt(command[TWO]);
         String nickname  = command[ONE];
         return game.hit(nickname, row, column);
-    }
+    } // end isValidAttack method
 
-    public void removeCA(ArrayList<ConnectionAgent> closed){
+    /**
+     * Removes <code>ConnectionAgents</code> from all of the collections as if
+     * they had sent the quit command.
+     *
+     * @param closed An <code>ArrayList</code> of <code>ConnectionAgents</code>
+     *               that have left the game and need to be removed.
+     */
+    private void removeConnectionAgents(ArrayList<ConnectionAgent> closed){
         for (ConnectionAgent agent : closed) {
             parseQuit("/quit", agent);
         }
-    }
+    } // end removeConnectionAgents method
+
 } // end BattleServer class

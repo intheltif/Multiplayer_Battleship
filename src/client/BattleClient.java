@@ -21,6 +21,9 @@ import java.net.Socket;
  */
 public class BattleClient extends MessageSource implements MessageListener {
 
+    /** Constant to represent a successful exit */
+    private static final int SUCCESS = 0;
+
     /** The domain of the host to connect to */
     private InetAddress hostname;
 
@@ -110,6 +113,9 @@ public class BattleClient extends MessageSource implements MessageListener {
     @Override
     public void messageReceived(String message, MessageSource source) {
         //System.out.println(message);
+        if(message.toLowerCase().trim().equals("disconnect")) {
+            System.exit(SUCCESS);
+        }
         print.messageReceived(message,source);
     } //end messageReceived
 
